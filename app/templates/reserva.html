@@ -32,7 +32,8 @@
         <p class="suave">Depois de pagar, envie o comprovante no WhatsApp. Assim que a Diana conferir, seu horário fica confirmado.</p>
         <a class="botao botao-zap botao-largo" href="{{ link_whatsapp(config.whatsapp, msg_whatsapp) }}" target="_blank" rel="noopener">Enviar comprovante no WhatsApp</a>
       {% endif %}
-      <p class="suave" style="margin-top:14px">Guarde este link para acompanhar seu agendamento. Quer ver seu histórico e a promoção? <a href="/minha-area">Crie sua área</a>.</p>
+      <p class="suave" style="margin-top:14px"><strong>Tolerância de {{ config.tolerancia_atraso_min }} minutos de atraso.</strong> Caso esse limite seja ultrapassado, o atendimento será reagendado.</p>
+      <p class="suave">Guarde este link para acompanhar seu agendamento. Quer ver seu histórico e a promoção? <a href="/minha-area">Crie sua área</a>.</p>
     </div>
   </div>
 </section>

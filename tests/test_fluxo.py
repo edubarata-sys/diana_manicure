@@ -22,7 +22,7 @@ def _proximo_livre(fabrica, nome="Pé + Mão"):
 def test_home_mostra_tabela_do_layout(cliente_http):
     r = cliente_http.get("/")
     assert r.status_code == 200
-    for texto in ("Pé + Mão", "R$ 60,00", "Spa dos Pés + Esmaltação", "R$ 100,00", "Adesivos", "20/10"):
+    for texto in ("Tolerância de 10 minutos", "Pé + Mão", "R$ 60,00", "Spa dos Pés + Esmaltação", "R$ 100,00", "Adesivos", "20/10"):
         assert texto in r.text
 
 
@@ -40,6 +40,7 @@ def test_cliente_agenda_sem_cadastro_e_diana_confirma(fabrica, cliente_http, pai
     assert r.status_code == 303 and r.headers["location"].startswith("/reserva/")
     reserva = cliente_http.get(r.headers["location"])
     assert "12982227847" in reserva.text and "R$ 30,00" in reserva.text
+    assert "Tolerância de 10 minutos de atraso" in reserva.text
 
     # O mesmo horário some para a próxima cliente.
     dup = cliente_http.post(

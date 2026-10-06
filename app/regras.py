@@ -210,10 +210,12 @@ def primeiro_nome(nome: str) -> str:
     return (nome or "").strip().split(" ")[0].capitalize()
 
 
-def msg_lembrete(nome: str, servico: str, inicio: datetime) -> str:
+def msg_lembrete(nome: str, servico: str, inicio: datetime, tolerancia_min: int = 10) -> str:
     return (
         f"Oi, {primeiro_nome(nome)}! 💅 Passando pra lembrar do seu horário: "
-        f"{servico}, {data_extenso(inicio)} às {inicio:%H:%M}. Te espero! Diana"
+        f"{servico}, {data_extenso(inicio)} às {inicio:%H:%M}. "
+        f"Lembrando: tolerância de {tolerancia_min} minutos de atraso; passou disso, o atendimento é reagendado. "
+        "Te espero! Diana"
     )
 
 

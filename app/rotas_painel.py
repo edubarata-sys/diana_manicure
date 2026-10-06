@@ -99,7 +99,7 @@ def agenda(request: Request, dia: str | None = None, db: Session = Depends(get_d
     itens = _agendamentos_do_dia(db, d)
     mensagens = {
         a.id: {
-            "lembrete": msg_lembrete(a.cliente.nome, a.servico.nome, a.inicio),
+            "lembrete": msg_lembrete(a.cliente.nome, a.servico.nome, a.inicio, sv.config(db).tolerancia_atraso_min),
             "sinal": msg_sinal_recebido(a.cliente.nome, a.servico.nome, a.inicio),
         }
         for a in itens + pendentes
@@ -483,6 +483,7 @@ CAMPOS_NUM = (
     "sinal_percentual",
     "horas_expira_sinal",
     "horas_cancelamento",
+    "tolerancia_atraso_min",
     "promo_idas",
     "passo_minutos",
     "antecedencia_minima_horas",

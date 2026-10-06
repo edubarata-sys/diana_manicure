@@ -17,6 +17,7 @@ Site de agendamento (cliente) + painel da Diana. FastAPI + Postgres, feito para 
 ## Regras implementadas
 - Sinal de 50% (configurável); pacote mensal é pago inteiro antes e vira saldo de 4 mãos + 2 pés.
 - Cliente com pacote que agenda "Só Mão"/"Só Pé" usa o pacote (sem sinal). Falta no pacote = atendimento perdido.
+- Tolerância de 10 minutos de atraso (configurável); passou disso, o atendimento é reagendado. Aparece na home, no aceite, na tela do Pix e no lembrete.
 - Falta: o sinal fica. Adesivos (R$ 3,50 o par) são lançados na conclusão, não no agendamento.
 
 ## Rodar local

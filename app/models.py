@@ -22,6 +22,8 @@ class Config(Base):
     sinal_percentual: Mapped[int] = mapped_column(Integer, default=50)
     horas_expira_sinal: Mapped[int] = mapped_column(Integer, default=12)
     horas_cancelamento: Mapped[int] = mapped_column(Integer, default=24)
+    # Atraso tolerado; passou disso, o atendimento é reagendado.
+    tolerancia_atraso_min: Mapped[int] = mapped_column(Integer, default=10)
     promo_idas: Mapped[int] = mapped_column(Integer, default=10)
     # Dias da semana ISO (1=segunda ... 7=domingo), separados por vírgula.
     dias_atendimento: Mapped[str] = mapped_column(String(20), default="2,3,4,5,6")
