@@ -1,0 +1,32 @@
+{% extends "painel/base.html" %}
+{% block titulo %}Agendar{% endblock %}
+{% block conteudo %}
+<h1 style="font-size:26px">Agendar para uma cliente</h1>
+<form class="cartao linha-form" method="get" action="/painel/novo">
+  <label class="campo">Serviço
+    <select class="entrada" name="servico" onchange="this.form.submit()">{% for s in servicos %}<option value="{{ s.id }}" {% if servico and s.id == servico.id %}selected{% endif %}>{{ s.nome }} ({{ s.duracao_min }} min)</option>{% endfor %}</select>
+  </label>
+  <label class="campo">Dia<input class="entrada" type="date" name="dia" value="{{ dia.isoformat() }}" onchange="this.form.submit()"></label>
+  {% if cliente_id %}<input type="hidden" name="cliente_id" value="{{ cliente_id }}">{% endif %}
+  <button class="botao botao-claro botao-pequeno" type="submit">Ver horários</button>
+</form>
+<form class="cartao" method="post" action="/painel/novo">
+  <input type="hidden" name="servico" value="{{ servico.id if servico else '' }}">
+  <input type="hidden" name="dia" value="{{ dia.isoformat() }}">
+  <div class="linha-form">
+    <label class="campo">Horário
+      <input class="entrada" name="hora" type="time" list="livres" value="{{ livres[0].strftime('%H:%M') if livres else '' }}" required>
+      <datalist id="livres">{% for h in livres %}<option value="{{ h.strftime('%H:%M') }}">{% endfor %}</datalist>
+    </label>
+    <label class="campo">Cliente cadastrada
+      <select class="entrada" name="cliente_id"><option value="">— nova cliente (preencha ao lado) —</option>{% for c in clientes %}<option value="{{ c.id }}" {% if cliente_id == c.id %}selected{% endif %}>{{ c.nome }} · {{ c.whatsapp|zap }}</option>{% endfor %}</select>
+    </label>
+    <label class="campo">Nome (nova)<input class="entrada" name="nome"></label>
+    <label class="campo">WhatsApp (nova)<input class="entrada" name="whatsapp" type="tel"></label>
+  </div>
+  <p class="suave">Livres neste dia: {% for h in livres %}{{ h.strftime('%H:%M') }}{% if not loop.last %}, {% endif %}{% else %}nenhum na grade (você pode encaixar outro horário, desde que não bata com outro atendimento){% endfor %}</p>
+  <label class="campo">Observação<input class="entrada" name="observacao"></label>
+  <label class="campo" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="sinal_pago" value="1"> Sinal já pago</label>
+  <button class="botao" type="submit">Agendar</button>
+</form>
+{% endblock %}

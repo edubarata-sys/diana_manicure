@@ -1,0 +1,41 @@
+{% extends "painel/base.html" %}
+{% block titulo %}Financeiro{% endblock %}
+{% block conteudo %}
+<div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
+  <h1 style="font-size:26px;margin:0;flex:1">Financeiro · {{ titulo_mes }}</h1>
+  <form method="get" action="/painel/financeiro" style="margin:0"><label class="sr" for="mes">Mês</label><input id="mes" class="entrada" type="month" name="mes" value="{{ mes }}" onchange="this.form.submit()" style="min-height:38px"></form>
+</div>
+<div class="kpis" style="margin-top:14px">
+  <div class="kpi"><small>Recebido no mês</small><strong>{{ total|brl }}</strong></div>
+  <div class="kpi"><small>Atendimentos</small><strong>{{ atendimentos }}</strong></div>
+  <div class="kpi"><small>Faltas</small><strong>{{ faltas }}</strong></div>
+  {% for f, v in por_forma.items() %}<div class="kpi"><small>{{ ROTULO_FORMA.get(f, f) }}</small><strong>{{ v|brl }}</strong></div>{% endfor %}
+</div>
+<div class="grade" style="align-items:start">
+  <div class="cartao tabela-caixa">
+    <h2 style="font-family:inherit;font-size:18px;margin-top:0">Por cliente</h2>
+    <table class="tabela"><thead><tr><th>Cliente</th><th>Pagamentos</th><th class="num">Total</th></tr></thead><tbody>
+    {% for l in por_cliente %}<tr><td><a href="/painel/clientes/{{ l.cliente.id }}">{{ l.cliente.nome }}</a></td><td>{{ l.qtd }}</td><td class="num">{{ l.total|brl }}</td></tr>
+    {% else %}<tr><td colspan="3" class="suave">Nada recebido neste mês.</td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+  <div class="cartao tabela-caixa">
+    <h2 style="font-family:inherit;font-size:18px;margin-top:0">Lançamentos</h2>
+    <table class="tabela"><thead><tr><th>Data</th><th>Cliente</th><th>O quê</th><th class="num">Valor</th></tr></thead><tbody>
+    {% for p in pagamentos %}<tr><td>{{ p.pago_em.strftime('%d/%m') }}</td><td>{{ p.cliente.nome }}</td><td>{{ p.descricao }} <span class="suave">· {{ ROTULO_FORMA.get(p.forma, p.forma) }}</span></td><td class="num">{{ p.valor|brl }}</td></tr>
+    {% else %}<tr><td colspan="4" class="suave">Sem lançamentos.</td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+</div>
+<form class="cartao" method="post" action="/painel/financeiro/lancar" style="margin-top:14px">
+  <h2 style="font-family:inherit;font-size:18px;margin-top:0">Lançar recebimento avulso</h2>
+  <div class="linha-form">
+    <label class="campo">Cliente<select class="entrada" name="cliente_id" required><option value="">Escolha</option>{% for c in clientes %}<option value="{{ c.id }}">{{ c.nome }}</option>{% endfor %}</select></label>
+    <label class="campo">Valor (R$)<input class="entrada" name="valor" inputmode="decimal" required></label>
+    <label class="campo">Forma<select class="entrada" name="forma">{% for f in formas %}<option value="{{ f }}">{{ ROTULO_FORMA[f] }}</option>{% endfor %}</select></label>
+    <label class="campo">Data<input class="entrada" type="date" name="data" value="{{ hoje.isoformat() }}"></label>
+    <label class="campo">Descrição<input class="entrada" name="descricao" placeholder="Ex.: produto vendido"></label>
+    <button class="botao botao-pequeno" type="submit">Lançar</button>
+  </div>
+</form>
+{% endblock %}

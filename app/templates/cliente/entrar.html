@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Minha área · {{ config.nome_negocio }}{% endblock %}
+{% block conteudo %}
+<section class="secao secao-rosa">
+  <div class="centro">
+    <p class="olho">Minha área</p>
+    <h1 class="titulo">Acompanhe suas idas</h1>
+    <p class="subtitulo">Opcional: para agendar não precisa de cadastro. Aqui você vê seu histórico e quanto falta para o atendimento grátis.</p>
+    <div class="grade">
+      <form class="cartao" method="post" action="/minha-area/entrar">
+        <h2 style="font-family:inherit;font-size:18px;margin-top:0">Já tenho cadastro</h2>
+        <label class="campo">WhatsApp<input class="entrada" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" required></label>
+        <label class="campo">Senha<input class="entrada" name="senha" type="password" autocomplete="current-password" required></label>
+        <button class="botao botao-largo" type="submit">Entrar</button>
+      </form>
+      <form class="cartao" method="post" action="/minha-area/cadastrar">
+        <h2 style="font-family:inherit;font-size:18px;margin-top:0">Quero me cadastrar</h2>
+        <label class="campo">Nome<input class="entrada" name="nome" autocomplete="name" required></label>
+        <label class="campo">WhatsApp (o mesmo que você usa para agendar)<input class="entrada" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" required></label>
+        <label class="campo">Crie uma senha (mín. 6)<input class="entrada" name="senha" type="password" minlength="6" autocomplete="new-password" required></label>
+        <button class="botao botao-claro botao-largo" type="submit">Criar minha área</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "painel/base.html" %}
+{% block titulo %}Agenda{% endblock %}
+{% block conteudo %}
+<div class="dias-semana" aria-label="Próximos dias">
+  {% for d in semana %}<a href="/painel?dia={{ d.isoformat() }}" {% if d == dia %}aria-current="date"{% endif %}>{{ d|extenso }}</a>{% endfor %}
+</div>
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0">
+  <a class="botao botao-claro botao-pequeno" href="/painel?dia={{ anterior }}" aria-label="Dia anterior">&lsaquo;</a>
+  <h1 style="margin:0;font-size:26px">{{ dia|extenso }}{% if dia == hoje %} · hoje{% endif %}</h1>
+  <a class="botao botao-claro botao-pequeno" href="/painel?dia={{ proximo }}" aria-label="Próximo dia">&rsaquo;</a>
+  <form method="get" action="/painel" style="margin:0"><label class="sr" for="ir-dia">Ir para o dia</label><input id="ir-dia" class="entrada" type="date" name="dia" value="{{ dia.isoformat() }}" onchange="this.form.submit()" style="min-height:38px"></form>
+  <a class="botao botao-pequeno" href="/painel/novo?dia={{ dia.isoformat() }}">+ Agendar neste dia</a>
+</div>
+
+<div class="grade" style="align-items:start">
+  <section>
+    <h2 style="font-size:20px">Atendimentos do dia</h2>
+    {% for a in itens %}{% include "painel/_item.html" %}{% else %}<p class="suave">Nenhum agendamento neste dia.</p>{% endfor %}
+  </section>
+  <section>
+    <h2 style="font-size:20px">Aguardando sinal ({{ pendentes|length }})</h2>
+    <p class="suave">Confira o Pix no banco antes de tocar em "Sinal recebido". Sem sinal em {{ config.horas_expira_sinal }}h, o horário libera sozinho.</p>
+    {% for a in pendentes %}{% include "painel/_item.html" %}{% else %}<p class="suave">Nenhum sinal pendente.</p>{% endfor %}
+  </section>
+</div>
+{% endblock %}

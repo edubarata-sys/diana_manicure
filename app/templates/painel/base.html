@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>{% block titulo %}Painel{% endblock %} · {{ config.nome_negocio }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito+Sans:wght@400;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/estilo.css">
+</head>
+<body>
+  <header class="topo painel-nav">
+    <a class="marca" href="/painel"><span class="marca-coracao" aria-hidden="true">&#9829;</span><span><span class="marca-nome">{{ config.nome_negocio }}</span><span class="marca-sub">Painel</span></span></a>
+    {% block nav %}
+    <nav class="menu" aria-label="Painel">
+      {% set atual = request.url.path %}
+      <a href="/painel" {% if atual == '/painel' %}aria-current="page"{% endif %}>Agenda</a>
+      <a href="/painel/novo" {% if atual.startswith('/painel/novo') %}aria-current="page"{% endif %}>+ Agendar</a>
+      <a href="/painel/clientes" {% if atual.startswith('/painel/clientes') %}aria-current="page"{% endif %}>Clientes</a>
+      <a href="/painel/financeiro" {% if atual.startswith('/painel/financeiro') %}aria-current="page"{% endif %}>Financeiro</a>
+      <a href="/painel/config" {% if atual.startswith('/painel/config') %}aria-current="page"{% endif %}>Ajustes</a>
+      <form method="post" action="/painel/sair" style="margin:0"><button type="submit">Sair</button></form>
+    </nav>
+    {% endblock %}
+  </header>
+  {% if recado %}<div class="recado recado-{{ recado.tipo }}" role="status">{{ recado.texto }}</div>{% endif %}
+  <main class="secao"><div class="largo">{% block conteudo %}{% endblock %}</div></main>
+</body>
+</html>

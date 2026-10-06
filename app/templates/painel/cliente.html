@@ -1,0 +1,53 @@
+{% extends "painel/base.html" %}
+{% block titulo %}{{ c.nome }}{% endblock %}
+{% block conteudo %}
+<p><a href="/painel/clientes">&lsaquo; Clientes</a></p>
+<h1 style="font-size:28px;margin:0 0 4px">{{ c.nome }}</h1>
+<p class="suave">{{ c.whatsapp|zap }} · cliente desde {{ c.criado_em.strftime('%d/%m/%Y') }}{% if c.senha_hash %} · tem área da cliente{% endif %}</p>
+
+<div class="kpis">
+  <div class="kpi"><small>Visitas</small><strong>{{ freq.visitas }}</strong></div>
+  <div class="kpi"><small>Ritmo</small><strong>{{ 'a cada %d dias'|format(freq.intervalo_medio) if freq.intervalo_medio else '—' }}</strong></div>
+  <div class="kpi"><small>Sem vir</small><strong>{{ '%d dias'|format(freq.dias_sem_vir) if freq.dias_sem_vir is not none else '—' }}</strong>{% if freq.sumida %}<span class="etiqueta tag-sumida">sumida</span>{% endif %}</div>
+  <div class="kpi"><small>Promoção</small><strong>{{ prog.feitas }}/{{ prog.meta }}</strong>{% if prog.ganhou %}<span class="etiqueta st-confirmado">ganhou grátis</span>{% endif %}</div>
+  <div class="kpi"><small>Total pago</small><strong>{{ total_pago|brl }}</strong></div>
+</div>
+
+<div class="acoes" style="margin-bottom:16px">
+  <a class="botao botao-pequeno" href="/painel/novo?cliente_id={{ c.id }}">+ Agendar</a>
+  <a class="botao botao-zap botao-pequeno" href="{{ link_whatsapp(c.whatsapp, msg_saudade) }}" target="_blank" rel="noopener">Mensagem de saudade</a>
+  <a class="botao botao-zap botao-pequeno" href="{{ link_whatsapp(c.whatsapp, msg_promo) }}" target="_blank" rel="noopener">Mensagem da promoção</a>
+  <a class="botao botao-claro botao-pequeno" href="{{ link_whatsapp(c.whatsapp) }}" target="_blank" rel="noopener">Abrir conversa</a>
+</div>
+
+{% if pacote %}
+<div class="cartao"><strong>Pacote ativo:</strong> mãos {{ pacote.maos_total - pacote.maos_usadas }}/{{ pacote.maos_total }}, pés {{ pacote.pes_total - pacote.pes_usadas }}/{{ pacote.pes_total }} restantes{% if pacote.perdidos %} · {{ pacote.perdidos }} perdido(s) por falta{% endif %}. Comprado em {{ pacote.comprado_em.strftime('%d/%m/%Y') }}.</div>
+{% endif %}
+
+<div class="grade" style="margin-top:14px;align-items:start">
+  <div class="cartao tabela-caixa">
+    <h2 style="font-family:inherit;font-size:18px;margin-top:0">Atendimentos</h2>
+    <table class="tabela"><thead><tr><th>Data</th><th>Serviço</th><th>Situação</th></tr></thead><tbody>
+    {% for a in agendamentos %}<tr><td><a href="/painel?dia={{ a.inicio.date().isoformat() }}">{{ a.inicio.strftime('%d/%m/%y %H:%M') }}</a></td><td>{{ a.servico.nome }}{% if a.cortesia %} (grátis){% endif %}</td><td><span class="etiqueta st-{{ a.status }}">{{ ROTULO_STATUS[a.status] }}</span></td></tr>
+    {% else %}<tr><td colspan="3" class="suave">Sem atendimentos.</td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+  <div class="cartao tabela-caixa">
+    <h2 style="font-family:inherit;font-size:18px;margin-top:0">Pagamentos</h2>
+    <table class="tabela"><thead><tr><th>Data</th><th>O quê</th><th class="num">Valor</th></tr></thead><tbody>
+    {% for p in pagamentos %}<tr><td>{{ p.pago_em.strftime('%d/%m/%y') }}</td><td>{{ p.descricao }} <span class="suave">· {{ ROTULO_FORMA.get(p.forma, p.forma) }}</span></td><td class="num">{{ p.valor|brl }}</td></tr>
+    {% else %}<tr><td colspan="3" class="suave">Sem pagamentos.</td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+</div>
+
+<form class="cartao" method="post" action="/painel/clientes/{{ c.id }}" style="margin-top:14px">
+  <h2 style="font-family:inherit;font-size:18px;margin-top:0">Dados</h2>
+  <div class="linha-form">
+    <label class="campo">Nome<input class="entrada" name="nome" value="{{ c.nome }}" required></label>
+    <label class="campo">WhatsApp<input class="entrada" name="whatsapp" type="tel" value="{{ c.whatsapp|zap }}" required></label>
+  </div>
+  <label class="campo">Observações<textarea class="entrada" name="observacoes">{{ c.observacoes }}</textarea></label>
+  <button class="botao botao-pequeno" type="submit">Salvar</button>
+</form>
+{% endblock %}

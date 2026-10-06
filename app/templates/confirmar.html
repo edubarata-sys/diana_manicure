@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}Confirme seu horário · {{ config.nome_negocio }}{% endblock %}
+{% block conteudo %}
+<section class="secao secao-clara">
+  <div class="centro">
+    <p class="olho">Última etapa</p>
+    <h1 class="titulo">Confirme seu horário</h1>
+    <form class="cartao" method="post" action="/agendar/confirmar">
+      <input type="hidden" name="servico" value="{{ servico.id }}">
+      <input type="hidden" name="inicio" value="{{ inicio.isoformat(timespec='minutes') }}">
+      <h2 style="font-family:inherit;font-size:18px;margin-top:0">Seus dados</h2>
+      <label class="campo">Nome completo
+        <input class="entrada" name="nome" autocomplete="name" required value="{{ cliente.nome if cliente else '' }}">
+      </label>
+      <label class="campo">WhatsApp (com DDD)
+        <input class="entrada" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="(12) 99999-9999" required value="{{ cliente.whatsapp|zap if cliente else '' }}">
+      </label>
+      <div class="resumo">
+        <small>Resumo do agendamento</small>
+        <div class="resumo-linha"><strong>{{ servico.nome }}</strong><strong style="color:var(--ouro)">{{ servico.preco|brl }}</strong></div>
+        <div>{{ inicio|extenso }} · {{ inicio.strftime('%H:%M') }}</div>
+      </div>
+      {% if pacote and servico.nome in ('Só Mão', 'Só Pé') %}
+      <div class="resumo" style="background:#e6f4ea;border-color:#9fd3b1">
+        <small>Seu pacote</small>
+        Este atendimento usa seu pacote ({{ pacote.restantes }} restante(s)). Sem sinal.
+      </div>
+      {% else %}
+      <div class="sinal">
+        <small>{% if servico.eh_pacote %}Pacote pago antes{% else %}Sinal para confirmar{% endif %}</small>
+        <div class="resumo-linha"><span>{% if servico.eh_pacote %}Valor do pacote{% else %}{{ config.sinal_percentual }}% do serviço{% endif %}</span><strong>{{ sinal|brl }}</strong></div>
+      </div>
+      {% endif %}
+      <label class="aceite">
+        <input type="checkbox" name="aceite" value="1" required>
+        <span>Li e aceito: o sinal não será devolvido. Com aviso de até {{ config.horas_cancelamento }}h de antecedência, o horário pode ser reagendado. Em caso de falta ou cancelamento em cima da hora, não haverá reagendamento nem devolução.</span>
+      </label>
+      <p style="margin-top:16px"><button class="botao botao-largo" type="submit">Reservar e ver o Pix</button></p>
+    </form>
+  </div>
+</section>
+{% endblock %}

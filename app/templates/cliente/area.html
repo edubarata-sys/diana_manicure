@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}Minha área · {{ config.nome_negocio }}{% endblock %}
+{% block conteudo %}
+<section class="secao secao-rosa">
+  <div class="centro">
+    <p class="olho">Minha área</p>
+    <h1 class="titulo">Olá, {{ cliente.nome.split(' ')[0] }}!</h1>
+    <div class="cartao">
+      <h2 style="font-family:inherit;font-size:18px;margin-top:0">Promoção fidelidade</h2>
+      {% if progresso.meta %}
+        {% if progresso.ganhou %}
+          <p><strong>Parabéns! Seu próximo atendimento é grátis 🎉</strong> Fale com a Diana para agendar.</p>
+        {% else %}
+          <p>Você tem <strong>{{ progresso.feitas }} de {{ progresso.meta }}</strong> idas. Faltam <strong>{{ progresso.faltam }}</strong> para ganhar um atendimento grátis.</p>
+        {% endif %}
+        <div class="barra" role="progressbar" aria-valuemin="0" aria-valuemax="{{ progresso.meta }}" aria-valuenow="{{ progresso.feitas }}"><span style="width:{{ (100 * progresso.feitas / progresso.meta)|round|int }}%"></span></div>
+        <div class="carimbos" aria-hidden="true">{% for i in range(progresso.meta) %}<span class="carimbo {% if i < progresso.feitas %}cheio{% endif %}">{% if i < progresso.feitas %}&#9829;{% endif %}</span>{% endfor %}</div>
+      {% else %}
+        <p class="suave">Sem promoção no momento.</p>
+      {% endif %}
+    </div>
+    {% if pacote %}
+    <div class="cartao">
+      <h2 style="font-family:inherit;font-size:18px;margin-top:0">Meu pacote</h2>
+      <p>Mãos: {{ pacote.maos_total - pacote.maos_usadas }} de {{ pacote.maos_total }} · Pés: {{ pacote.pes_total - pacote.pes_usadas }} de {{ pacote.pes_total }} restantes.</p>
+      <p class="suave">Avise com {{ config.horas_cancelamento }}h de antecedência se não puder vir: sem aviso, o atendimento do pacote é perdido.</p>
+    </div>
+    {% endif %}
+    <div class="cartao">
+      <h2 style="font-family:inherit;font-size:18px;margin-top:0">Meu histórico</h2>
+      {% if agendamentos %}
+      <div class="tabela-caixa"><table class="tabela">
+        <thead><tr><th>Data</th><th>Serviço</th><th>Situação</th></tr></thead>
+        <tbody>{% for a in agendamentos %}
+          <tr><td>{{ a.inicio.strftime('%d/%m/%Y %H:%M') }}</td><td>{{ a.servico.nome }}{% if a.cortesia %} (grátis){% endif %}</td><td><span class="etiqueta st-{{ a.status }}">{{ ROTULO_STATUS[a.status] }}</span>{% if a.status == 'aguardando_sinal' %} <a href="/reserva/{{ a.codigo }}">ver Pix</a>{% endif %}</td></tr>
+        {% endfor %}</tbody>
+      </table></div>
+      {% else %}<p class="suave">Ainda não tem atendimentos. <a href="/#servicos">Agende o primeiro!</a></p>{% endif %}
+    </div>
+    <form method="post" action="/minha-area/sair" style="text-align:center;margin-top:16px"><button class="botao botao-claro" type="submit">Sair</button></form>
+  </div>
+</section>
+{% endblock %}

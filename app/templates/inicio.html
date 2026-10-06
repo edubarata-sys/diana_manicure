@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<section class="heroi">
+  <div class="heroi-cartao">
+    <p class="olho">Seu momento de cuidado</p>
+    <h1>Beleza e carinho no seu tempo</h1>
+    <p>Escolha o serviço, encontre o melhor horário e confirme seu atendimento em poucos minutos.</p>
+    <a class="botao" href="#servicos">Agendar meu horário</a>
+  </div>
+</section>
+
+<section class="secao secao-rosa" id="servicos">
+  <div class="centro">
+    <p class="olho">Serviços</p>
+    <h2 class="titulo">Escolha o seu cuidado</h2>
+    <p class="subtitulo">{{ config.aviso_tabela }}</p>
+    <form action="/agendar" method="get">
+      <fieldset style="border:0;padding:0;margin:0">
+        <legend class="sr">Serviço</legend>
+        <div class="lista-servicos">
+          {% for s in servicos %}
+            {% if s.agendavel %}
+            <label class="servico">
+              <input type="radio" name="servico" value="{{ s.id }}" {% if loop.first %}checked{% endif %} required>
+              <span><span class="servico-nome">{{ s.nome }}</span><br><span class="servico-desc">{{ s.descricao }}</span></span>
+              <span class="servico-preco">{{ s.preco|brl }}</span>
+            </label>
+            {% else %}
+            <div class="servico servico-info">
+              <span class="ponto" aria-hidden="true"></span>
+              <span><span class="servico-nome">{{ s.nome }}</span><br><span class="servico-desc">{{ s.descricao }}</span></span>
+              <span class="servico-preco">{{ s.preco|brl }}</span>
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </fieldset>
+      <p style="margin-top:18px"><button class="botao botao-largo" type="submit">Continuar</button></p>
+    </form>
+  </div>
+</section>
+
+<section class="secao secao-clara">
+  <div class="centro">
+    <p class="olho">Simples e rápido</p>
+    <h2 class="titulo">Como funciona</h2>
+    <div class="passos" style="margin-top:18px">
+      <div class="passo"><div class="passo-num">1</div><h3>Escolha</h3><p>Selecione o serviço desejado.</p></div>
+      <div class="passo"><div class="passo-num">2</div><h3>Agende</h3><p>Escolha a melhor data e horário.</p></div>
+      <div class="passo"><div class="passo-num">3</div><h3>Confirme</h3><p>Pague o sinal de {{ config.sinal_percentual }}% e pronto.</p></div>
+    </div>
+    <div class="faixa">Você recebe a confirmação pelo WhatsApp</div>
+  </div>
+</section>
+{% endblock %}

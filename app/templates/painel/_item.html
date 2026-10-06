@@ -1,0 +1,53 @@
+{# Um agendamento com as ações do dia. Espera: a, mensagens, formas #}
+<div class="cartao item-agenda">
+  <div class="item-agenda-topo">
+    <span class="hora-grande">{{ a.inicio.strftime('%H:%M') }}</span>
+    <strong><a href="/painel/clientes/{{ a.cliente.id }}">{{ a.cliente.nome }}</a></strong>
+    <span class="suave">{{ a.servico.nome }} · até {{ a.fim.strftime('%H:%M') }}</span>
+    <span class="etiqueta st-{{ a.status }}">{{ ROTULO_STATUS[a.status] }}</span>
+    {% if a.pacote %}<span class="etiqueta" style="background:#f3e6ff;color:#5b2a86">Pacote ({{ a.pacote.restantes }} rest.)</span>{% endif %}
+  </div>
+  <div class="suave">
+    Valor {{ a.valor|brl }}{% if a.sinal %} · sinal {{ a.sinal|brl }}{% if a.sinal_pago_em %} pago{% endif %}{% endif %}
+    {% if a.observacao %} · {{ a.observacao }}{% endif %}
+  </div>
+  <div class="acoes">
+    <a class="botao botao-zap botao-pequeno" href="{{ link_whatsapp(a.cliente.whatsapp, mensagens[a.id].lembrete) }}" target="_blank" rel="noopener">Lembrete</a>
+    {% if a.status == 'aguardando_sinal' or a.status == 'expirado' %}
+      <form method="post" action="/painel/ag/{{ a.id }}/sinal">
+        <select class="entrada" name="forma" style="min-height:38px;width:auto;font-size:14px" aria-label="Forma do sinal">{% for f in formas %}<option value="{{ f }}">{{ ROTULO_FORMA[f] }}</option>{% endfor %}</select>
+        <button class="botao botao-ok botao-pequeno" type="submit">Sinal recebido</button>
+      </form>
+    {% endif %}
+    {% if a.status == 'confirmado' %}
+      <a class="botao botao-claro botao-pequeno" href="{{ link_whatsapp(a.cliente.whatsapp, mensagens[a.id].sinal) }}" target="_blank" rel="noopener">Avisar confirmação</a>
+    {% endif %}
+    {% if a.status in ('aguardando_sinal', 'confirmado') %}
+      <form method="post" action="/painel/ag/{{ a.id }}/falta"><button class="botao botao-perigo botao-pequeno" type="submit">Faltou</button></form>
+      <form method="post" action="/painel/ag/{{ a.id }}/cancelar"><button class="botao botao-perigo botao-pequeno" type="submit">Cancelar</button></form>
+    {% endif %}
+  </div>
+  {% if a.status == 'confirmado' %}
+  <details class="concluir">
+    <summary>Concluir atendimento</summary>
+    <form method="post" action="/painel/ag/{{ a.id }}/concluir" class="linha-form">
+      <label class="campo">Recebido agora (R$)
+        <input class="entrada" name="valor" inputmode="decimal" value="{{ '%.2f'|format((a.valor - (a.sinal if a.sinal_pago_em else 0)) / 100)|replace('.', ',') }}">
+      </label>
+      <label class="campo">Forma
+        <select class="entrada" name="forma">{% for f in formas %}<option value="{{ f }}">{{ ROTULO_FORMA[f] }}</option>{% endfor %}</select>
+      </label>
+      <label class="campo">Adesivos (pares)
+        <input class="entrada" name="adesivos" type="number" min="0" value="0">
+      </label>
+      {% if a.pacote %}
+      <label class="campo">Usou do pacote
+        <select class="entrada" name="uso_pacote"><option value="mao" {% if 'Mão' in a.servico.nome %}selected{% endif %}>Mão</option><option value="pe" {% if 'Pé' in a.servico.nome and 'Mão' not in a.servico.nome %}selected{% endif %}>Pé</option><option value="">Não usou</option></select>
+      </label>
+      {% endif %}
+      <label class="campo" style="flex-direction:row"><span><input type="checkbox" name="cortesia" value="1"> Grátis da promoção</span></label>
+      <button class="botao botao-pequeno" type="submit">Concluir</button>
+    </form>
+  </details>
+  {% endif %}
+</div>

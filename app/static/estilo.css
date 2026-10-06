@@ -1,0 +1,234 @@
+:root {
+  --vinho: #7a1232;
+  --vinho-escuro: #5a0c24;
+  --ouro: #b98a2e;
+  --ouro-claro: #e8d3a6;
+  --rosa: #fbeef1;
+  --rosa-medio: #f6dde3;
+  --creme: #fffaf6;
+  --texto: #3a2a2e;
+  --suave: #7d676c;
+  --borda: #ecd9de;
+  --ok: #2e7d4f;
+  --erro: #b3261e;
+  --raio: 16px;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--texto);
+  background: var(--rosa);
+  line-height: 1.45;
+}
+a { color: var(--vinho); }
+h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; color: var(--vinho); line-height: 1.15; }
+img { max-width: 100%; }
+
+/* Topo */
+.topo {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; background: var(--creme); border-bottom: 1px solid var(--borda);
+}
+.marca { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.marca-coracao { color: var(--vinho); font-size: 20px; }
+.marca-nome { font-family: "Great Vibes", "Dancing Script", cursive; font-size: 26px; color: var(--vinho-escuro); line-height: 1; }
+.marca-sub { display: block; font-size: 9px; letter-spacing: .12em; font-weight: 800; color: var(--vinho); text-transform: uppercase; }
+.menu { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.menu a, .menu button {
+  font: inherit; font-size: 14px; font-weight: 700; text-decoration: none; color: var(--vinho);
+  background: none; border: 1px solid transparent; border-radius: 999px; padding: 8px 12px; cursor: pointer;
+}
+.menu a:hover, .menu button:hover { border-color: var(--ouro-claro); }
+
+/* Estrutura */
+.secao { padding: 36px 16px; }
+.secao-clara { background: var(--creme); }
+.secao-rosa { background: var(--rosa); }
+.centro { max-width: 640px; margin: 0 auto; }
+.largo { max-width: 1040px; margin: 0 auto; }
+.olho { text-align: center; font-size: 11px; letter-spacing: .14em; font-weight: 800; color: var(--ouro); text-transform: uppercase; margin: 0 0 6px; }
+.titulo { text-align: center; font-size: clamp(26px, 6vw, 34px); margin: 0 0 6px; }
+.subtitulo { text-align: center; color: var(--suave); margin: 0 0 22px; }
+
+.heroi {
+  padding: 40px 16px 28px;
+  background:
+    radial-gradient(circle at 10% 10%, #f7cfd8 0, transparent 45%),
+    radial-gradient(circle at 90% 80%, #f3c9a8 0, transparent 40%),
+    var(--rosa-medio);
+}
+.heroi-cartao {
+  max-width: 560px; margin: 0 auto; text-align: center;
+  background: var(--creme); border: 1.5px solid var(--ouro); border-radius: 22px; padding: 28px 22px;
+  box-shadow: 0 10px 30px rgba(122, 18, 50, .12);
+}
+.heroi-cartao h1 { font-size: clamp(30px, 8vw, 42px); margin: 6px 0 12px; }
+
+.cartao {
+  background: var(--creme); border: 1px solid var(--borda); border-radius: var(--raio);
+  padding: 18px; box-shadow: 0 6px 20px rgba(122, 18, 50, .06);
+}
+.cartao + .cartao { margin-top: 14px; }
+
+/* Botões */
+.botao {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 12px 24px; border-radius: 999px; border: 1.5px solid var(--ouro);
+  background: var(--vinho); color: #fff; font: inherit; font-weight: 800; letter-spacing: .04em;
+  text-transform: uppercase; font-size: 14px; text-decoration: none; cursor: pointer;
+}
+.botao:hover { background: var(--vinho-escuro); }
+.botao-largo { width: 100%; }
+.botao-claro { background: var(--creme); color: var(--vinho); border-color: var(--borda); }
+.botao-claro:hover { background: var(--rosa); }
+.botao-ok { background: var(--ok); border-color: var(--ok); }
+.botao-perigo { background: var(--creme); color: var(--erro); border-color: #e7b9b5; }
+.botao-pequeno { min-height: 38px; padding: 8px 14px; font-size: 12px; }
+.botao-zap { background: #1f8b4c; border-color: #1f8b4c; }
+
+/* Serviços */
+.lista-servicos { display: grid; gap: 10px; }
+.servico {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer;
+  background: #fff; border: 1px solid var(--borda); border-radius: 14px;
+}
+.servico input { accent-color: var(--vinho); width: 18px; height: 18px; flex: none; }
+.servico:has(input:checked) { border-color: var(--ouro); background: #fbeaee; }
+.servico-nome { font-weight: 800; color: var(--vinho); }
+.servico-desc { font-size: 12px; color: var(--suave); }
+.servico-preco { margin-left: auto; font-weight: 800; color: var(--ouro); white-space: nowrap; }
+.servico-info { cursor: default; background: transparent; border-style: dashed; }
+.servico-info .ponto { width: 10px; height: 10px; border-radius: 50%; background: var(--ouro-claro); flex: none; }
+
+/* Como funciona */
+.passos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.passo-num {
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--vinho); color: #fff; font-weight: 800; border: 2px solid var(--ouro);
+}
+.passo h3 { font-family: inherit; font-size: 15px; margin: 8px 0 2px; }
+.passo p { margin: 0; font-size: 12px; color: var(--suave); }
+.faixa { margin-top: 18px; padding: 12px; text-align: center; background: var(--rosa-medio); border-radius: 12px; font-weight: 700; font-size: 13px; color: var(--vinho); }
+
+/* Etapas */
+.etapas { display: flex; align-items: center; justify-content: center; gap: 0; margin: 4px 0 18px; }
+.etapa { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--ouro); background: var(--creme); }
+.etapa.feita { background: var(--vinho); }
+.etapa-linha { width: 60px; height: 2px; background: var(--ouro-claro); }
+
+/* Calendário */
+.cal-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.cal-topo h3 { margin: 0; font-size: 20px; }
+.cal-nav { text-decoration: none; font-size: 20px; font-weight: 800; color: var(--ouro); padding: 6px 12px; }
+.cal { width: 100%; border-collapse: collapse; table-layout: fixed; text-align: center; }
+.cal th { font-size: 11px; color: var(--suave); padding: 6px 0; }
+.cal td { padding: 3px 0; }
+.dia {
+  display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 50%;
+  text-decoration: none; color: var(--texto); font-weight: 700;
+}
+.dia-livre { color: var(--vinho); background: #fff; border: 1px solid var(--borda); }
+.dia-livre:hover { border-color: var(--ouro); }
+.dia-off { color: #c9b9bd; font-weight: 400; }
+.dia-escolhido { background: var(--vinho); color: #fff; border: 2px solid var(--ouro); }
+.horarios { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.horario {
+  display: block; text-align: center; padding: 10px 0; border-radius: 999px; text-decoration: none;
+  border: 1.5px solid var(--borda); background: #fff; color: var(--texto); font-weight: 800;
+}
+.horario:hover { border-color: var(--ouro); background: var(--vinho); color: #fff; }
+
+/* Formulários */
+label.campo { display: grid; gap: 4px; margin-bottom: 12px; font-size: 12px; font-weight: 800; color: var(--vinho); }
+.entrada, select.entrada, textarea.entrada {
+  width: 100%; min-height: 46px; padding: 10px 12px; font: inherit; font-size: 16px; color: var(--texto);
+  background: #fff; border: 1px solid var(--borda); border-radius: 10px;
+}
+.entrada:focus { outline: 2px solid var(--ouro-claro); border-color: var(--ouro); }
+textarea.entrada { min-height: 80px; }
+.aceite { display: flex; gap: 10px; align-items: flex-start; padding: 14px; background: #fff3f5; border-radius: 12px; font-size: 13px; color: var(--suave); }
+.aceite input { accent-color: var(--vinho); width: 20px; height: 20px; flex: none; margin-top: 2px; }
+
+.resumo { border: 1px solid var(--ouro); background: #fbe9ee; border-radius: 14px; padding: 14px; margin: 14px 0; }
+.resumo small { display: block; font-size: 10px; letter-spacing: .12em; font-weight: 800; color: var(--vinho); text-transform: uppercase; }
+.resumo-linha { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.resumo-linha strong { color: var(--vinho); font-size: 18px; }
+.sinal { background: var(--vinho); color: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; }
+.sinal small { display: block; font-size: 10px; letter-spacing: .12em; font-weight: 800; color: var(--ouro-claro); text-transform: uppercase; }
+.sinal .resumo-linha strong { color: #fff; font-size: 20px; }
+
+.pix { display: flex; gap: 8px; align-items: center; background: #fff; border: 1px dashed var(--ouro); border-radius: 12px; padding: 10px 12px; }
+.pix code { font-size: 18px; font-weight: 800; flex: 1; word-break: break-all; color: var(--vinho); }
+
+/* Recados */
+.recado { max-width: 1040px; margin: 12px auto; padding: 12px 16px; border-radius: 12px; font-weight: 700; }
+.recado-ok { background: #e6f4ea; color: var(--ok); }
+.recado-erro { background: #fdecea; color: var(--erro); }
+.recado-aviso { background: #fff6dd; color: #7a5b00; }
+
+/* Rótulos */
+.etiqueta { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; }
+.st-aguardando_sinal { background: #fff6dd; color: #7a5b00; }
+.st-confirmado { background: #e6f4ea; color: var(--ok); }
+.st-concluido { background: #e8eefc; color: #2747a0; }
+.st-cancelado, .st-expirado { background: #eee; color: #666; }
+.st-falta { background: #fdecea; color: var(--erro); }
+
+/* Barra de progresso (promoção) */
+.barra { height: 12px; background: var(--rosa-medio); border-radius: 999px; overflow: hidden; }
+.barra > span { display: block; height: 100%; background: linear-gradient(90deg, var(--vinho), var(--ouro)); }
+.carimbos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.carimbo { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--ouro-claro); display: grid; place-items: center; font-size: 13px; }
+.carimbo.cheio { background: var(--vinho); border-color: var(--ouro); color: #fff; }
+
+/* Tabelas */
+.tabela-caixa { overflow-x: auto; }
+table.tabela { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tabela th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--suave); padding: 8px; border-bottom: 1px solid var(--borda); }
+.tabela td { padding: 10px 8px; border-bottom: 1px solid var(--borda); vertical-align: top; }
+.num { text-align: right; white-space: nowrap; }
+
+/* Painel */
+.painel-nav { background: var(--vinho-escuro); }
+.painel-nav .menu a, .painel-nav .menu button { color: #fff; }
+.painel-nav .menu a[aria-current="page"] { border-color: var(--ouro); }
+.painel-nav .marca-nome, .painel-nav .marca-sub, .painel-nav .marca-coracao { color: #fff; }
+.grade { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.kpis { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 16px; }
+.kpi { background: var(--creme); border: 1px solid var(--borda); border-radius: 14px; padding: 12px 14px; }
+.kpi small { color: var(--suave); font-weight: 700; font-size: 12px; }
+.kpi strong { display: block; font-size: 22px; color: var(--vinho); }
+.item-agenda { display: grid; gap: 8px; }
+.item-agenda-topo { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.hora-grande { font-size: 22px; font-weight: 800; color: var(--vinho); }
+.acoes { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.acoes form { margin: 0; }
+details.concluir { width: 100%; }
+details.concluir summary { cursor: pointer; font-weight: 800; color: var(--vinho); padding: 6px 0; }
+.linha-form { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); align-items: end; }
+.dias-semana { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+.dias-semana a { flex: none; text-align: center; text-decoration: none; padding: 8px 12px; border-radius: 12px; background: var(--creme); border: 1px solid var(--borda); color: var(--texto); font-size: 13px; }
+.dias-semana a[aria-current="date"] { background: var(--vinho); color: #fff; border-color: var(--ouro); }
+.suave { color: var(--suave); font-size: 13px; }
+.tag-sumida { background: #fdecea; color: var(--erro); }
+.checks { display: flex; flex-wrap: wrap; gap: 10px; }
+.checks label { display: flex; gap: 6px; align-items: center; font-size: 14px; }
+
+/* Rodapé */
+.rodape { background: var(--vinho-escuro); color: #fff; text-align: center; padding: 30px 16px; }
+.rodape .marca-nome { color: #fff; font-size: 32px; }
+.rodape .marca-sub { color: var(--ouro-claro); }
+.rodape p { margin: 6px 0; font-size: 14px; }
+.rodape a { color: #fff; }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+@media (max-width: 520px) {
+  .passos { grid-template-columns: 1fr; }
+  .menu a, .menu button { padding: 6px 8px; font-size: 13px; }
+  .horarios { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

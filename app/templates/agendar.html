@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}Escolha data e horário · {{ config.nome_negocio }}{% endblock %}
+{% block conteudo %}
+<section class="secao secao-rosa">
+  <div class="centro">
+    <p class="olho">Agendamento</p>
+    <h1 class="titulo">Escolha data e horário</h1>
+    <p class="subtitulo">{{ servico.nome }} · {{ servico.preco|brl }}{% if servico.duracao_min %} · {{ servico.duracao_min }} min{% endif %} · <a href="/#servicos">trocar</a></p>
+    <div class="cartao">
+      <p class="olho">Etapa 2 de 3</p>
+      <div class="etapas" aria-hidden="true"><span class="etapa feita"></span><span class="etapa-linha"></span><span class="etapa feita"></span><span class="etapa-linha"></span><span class="etapa"></span></div>
+      <div class="cal-topo">
+        {% if mostrar_anterior %}<a class="cal-nav" href="/agendar?servico={{ servico.id }}&mes={{ anterior }}" aria-label="Mês anterior">&lsaquo;</a>{% else %}<span class="cal-nav" aria-hidden="true"></span>{% endif %}
+        <h3>{{ titulo_mes }}</h3>
+        <a class="cal-nav" href="/agendar?servico={{ servico.id }}&mes={{ proximo }}" aria-label="Próximo mês">&rsaquo;</a>
+      </div>
+      <table class="cal">
+        <thead><tr><th>D</th><th>S</th><th>T</th><th>Q</th><th>Q</th><th>S</th><th>S</th></tr></thead>
+        <tbody>
+        {% for semana in semanas %}<tr>
+          {% for d in semana %}<td>
+            {% if d is none %}
+            {% elif d == dia %}<span class="dia dia-escolhido" aria-current="date">{{ d.day }}</span>
+            {% elif d in disponiveis %}<a class="dia dia-livre" href="/agendar?servico={{ servico.id }}&mes={{ mes }}&dia={{ d.isoformat() }}#horarios">{{ d.day }}</a>
+            {% else %}<span class="dia dia-off">{{ d.day }}</span>{% endif %}
+          </td>{% endfor %}
+        </tr>{% endfor %}
+        </tbody>
+      </table>
+      <hr style="border:0;border-top:1px solid var(--borda);margin:16px 0">
+      <h3 id="horarios" style="font-family:inherit;font-size:16px;margin:0 0 10px">Horários disponíveis{% if dia %} · {{ dia|extenso }}{% endif %}</h3>
+      {% if not dia %}
+        <p class="suave">Toque num dia em destaque para ver os horários.</p>
+      {% elif horarios %}
+        <div class="horarios">
+          {% for h in horarios %}
+          <a class="horario" href="/agendar/confirmar?servico={{ servico.id }}&inicio={{ h.isoformat(timespec='minutes') }}">{{ h.strftime('%H:%M') }}</a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="suave">Sem horário livre nesse dia. Tente outro dia.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

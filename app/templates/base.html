@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}{{ config.nome_negocio }} · Manicure & Pedicure{% endblock %}</title>
+  <meta name="description" content="Agende seu horário com {{ config.nome_negocio }} — manicure e pedicure.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito+Sans:wght@400;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="/">
+      <span class="marca-coracao" aria-hidden="true">&#9829;</span>
+      <span><span class="marca-nome">{{ config.nome_negocio }}</span><span class="marca-sub">Manicure &amp; Pedicure</span></span>
+    </a>
+    <nav class="menu" aria-label="Menu">
+      <a href="/#servicos">Agendar</a>
+      <a href="/minha-area">Minha área</a>
+    </nav>
+  </header>
+  {% if recado %}<div class="recado recado-{{ recado.tipo }}" role="status">{{ recado.texto }}</div>{% endif %}
+  <main>{% block conteudo %}{% endblock %}</main>
+  <footer class="rodape">
+    <div class="marca-nome">{{ config.nome_negocio }}</div>
+    <span class="marca-sub">Manicure &amp; Pedicure</span>
+    <p style="margin-top:14px">{{ config.endereco }}</p>
+    <p><strong>WhatsApp: <a href="{{ link_whatsapp(config.whatsapp) }}">{{ config.whatsapp|zap }}</a></strong></p>
+    <p style="font-size:12px;opacity:.8">Atendimento com hora marcada</p>
+  </footer>
+</body>
+</html>

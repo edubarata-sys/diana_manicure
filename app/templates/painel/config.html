@@ -1,0 +1,63 @@
+{% extends "painel/base.html" %}
+{% block titulo %}Ajustes{% endblock %}
+{% block conteudo %}
+<h1 style="font-size:26px">Ajustes</h1>
+{% set dias_ativos = config.dias_atendimento.split(',') %}
+<form class="cartao" method="post" action="/painel/config">
+  <h2 style="font-family:inherit;font-size:18px;margin-top:0">Horário de atendimento</h2>
+  <fieldset style="border:0;padding:0;margin:0 0 12px"><legend class="campo" style="font-size:12px;font-weight:800;color:var(--vinho)">Dias que atende</legend>
+    <div class="checks">{% for n, nome in [(2,'Ter'),(3,'Qua'),(4,'Qui'),(5,'Sex'),(6,'Sáb'),(7,'Dom'),(1,'Seg')] %}<label><input type="checkbox" name="dias" value="{{ n }}" {% if n|string in dias_ativos %}checked{% endif %}> {{ nome }}</label>{% endfor %}</div>
+  </fieldset>
+  <div class="linha-form">
+    <label class="campo">Abre<input class="entrada" type="time" name="abre" value="{{ config.abre }}"></label>
+    <label class="campo">Fecha<input class="entrada" type="time" name="fecha" value="{{ config.fecha }}"></label>
+    <label class="campo">Pausas (almoço, café)<input class="entrada" name="pausas" value="{{ config.pausas }}" placeholder="11:00-12:00,15:00-15:15"></label>
+    <label class="campo">Intervalo da grade (min)<input class="entrada" type="number" min="5" name="passo_minutos" value="{{ config.passo_minutos }}"></label>
+    <label class="campo">Antecedência mínima (h)<input class="entrada" type="number" min="0" name="antecedencia_minima_horas" value="{{ config.antecedencia_minima_horas }}"></label>
+    <label class="campo">Agenda aberta até (dias)<input class="entrada" type="number" min="1" name="dias_maximos_agenda" value="{{ config.dias_maximos_agenda }}"></label>
+  </div>
+  <h2 style="font-family:inherit;font-size:18px">Sinal e regras</h2>
+  <div class="linha-form">
+    <label class="campo">Sinal (%)<input class="entrada" type="number" min="0" max="100" name="sinal_percentual" value="{{ config.sinal_percentual }}"></label>
+    <label class="campo">Reserva sem sinal expira em (h)<input class="entrada" type="number" min="1" name="horas_expira_sinal" value="{{ config.horas_expira_sinal }}"></label>
+    <label class="campo">Aviso de cancelamento (h)<input class="entrada" type="number" min="0" name="horas_cancelamento" value="{{ config.horas_cancelamento }}"></label>
+    <label class="campo">Promoção: idas para ganhar 1 grátis (0 = sem)<input class="entrada" type="number" min="0" name="promo_idas" value="{{ config.promo_idas }}"></label>
+  </div>
+  <h2 style="font-family:inherit;font-size:18px">Contato</h2>
+  <div class="linha-form">
+    <label class="campo">Nome<input class="entrada" name="nome_negocio" value="{{ config.nome_negocio }}"></label>
+    <label class="campo">WhatsApp<input class="entrada" name="whatsapp" type="tel" value="{{ config.whatsapp|zap }}"></label>
+    <label class="campo">Chave Pix<input class="entrada" name="chave_pix" value="{{ config.chave_pix }}"></label>
+    <label class="campo">Endereço<input class="entrada" name="endereco" value="{{ config.endereco }}"></label>
+    <label class="campo">Aviso da tabela<input class="entrada" name="aviso_tabela" value="{{ config.aviso_tabela }}"></label>
+  </div>
+  <button class="botao" type="submit">Salvar ajustes</button>
+</form>
+
+<form class="cartao" method="post" action="/painel/servicos" style="margin-top:16px">
+  <h2 style="font-family:inherit;font-size:18px;margin-top:0">Serviços e preços</h2>
+  <div class="tabela-caixa"><table class="tabela">
+    <thead><tr><th>Nome</th><th>Descrição</th><th>Preço</th><th>Duração (min)</th><th>Ativo</th><th>Agendável</th></tr></thead>
+    <tbody>
+    {% for s in servicos %}{% set p = 's%d_'|format(s.id) %}
+      <tr>
+        <td><input class="entrada" name="{{ p }}nome" value="{{ s.nome }}" style="min-width:150px" aria-label="Nome"></td>
+        <td><input class="entrada" name="{{ p }}descricao" value="{{ s.descricao }}" style="min-width:200px" aria-label="Descrição"></td>
+        <td><input class="entrada" name="{{ p }}preco" value="{{ '%.2f'|format(s.preco / 100)|replace('.', ',') }}" inputmode="decimal" style="width:100px" aria-label="Preço"></td>
+        <td><input class="entrada" name="{{ p }}duracao" type="number" min="0" value="{{ s.duracao_min }}" style="width:90px" aria-label="Duração"></td>
+        <td><input type="checkbox" name="{{ p }}ativo" {% if s.ativo %}checked{% endif %} aria-label="Ativo"></td>
+        <td><input type="checkbox" name="{{ p }}agendavel" {% if s.agendavel %}checked{% endif %} aria-label="Agendável"></td>
+      </tr>
+    {% endfor %}
+      <tr>
+        <td><input class="entrada" name="novo_nome" placeholder="Novo serviço" aria-label="Novo serviço"></td>
+        <td><input class="entrada" name="novo_descricao" aria-label="Descrição do novo"></td>
+        <td><input class="entrada" name="novo_preco" inputmode="decimal" style="width:100px" aria-label="Preço do novo"></td>
+        <td><input class="entrada" name="novo_duracao" type="number" min="0" value="60" style="width:90px" aria-label="Duração do novo"></td>
+        <td colspan="2" class="suave">novo</td>
+      </tr>
+    </tbody>
+  </table></div>
+  <button class="botao" type="submit" style="margin-top:12px">Salvar tabela</button>
+</form>
+{% endblock %}

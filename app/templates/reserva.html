@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo %}Seu agendamento · {{ config.nome_negocio }}{% endblock %}
+{% block conteudo %}
+<section class="secao secao-clara">
+  <div class="centro">
+    {% if ag.status == 'aguardando_sinal' %}
+      <p class="olho">Quase lá</p>
+      <h1 class="titulo">Pague o sinal para confirmar</h1>
+      <p class="subtitulo">Seu horário fica reservado por {{ config.horas_expira_sinal }}h aguardando o Pix.</p>
+    {% elif ag.status == 'confirmado' %}
+      <p class="olho">Tudo certo</p>
+      <h1 class="titulo">Horário confirmado</h1>
+      <p class="subtitulo">Te espero! 💅</p>
+    {% else %}
+      <p class="olho">Seu agendamento</p>
+      <h1 class="titulo">{{ ROTULO_STATUS[ag.status] }}</h1>
+    {% endif %}
+    <div class="cartao">
+      <div class="resumo" style="margin-top:0">
+        <small>{{ ag.cliente.nome }}</small>
+        <div class="resumo-linha"><strong>{{ ag.servico.nome }}</strong><strong style="color:var(--ouro)">{{ ag.valor|brl }}</strong></div>
+        <div>{{ ag.inicio|extenso }} · {{ ag.inicio.strftime('%H:%M') }}</div>
+        <p style="margin:8px 0 0"><span class="etiqueta st-{{ ag.status }}">{{ ROTULO_STATUS[ag.status] }}</span></p>
+      </div>
+      {% if ag.status == 'aguardando_sinal' %}
+        <div class="sinal"><small>Valor do Pix</small><div class="resumo-linha"><span>{% if ag.servico.eh_pacote %}Pacote{% else %}Sinal{% endif %}</span><strong>{{ ag.sinal|brl }}</strong></div></div>
+        <p style="font-weight:800;margin:0 0 6px">Chave Pix (celular)</p>
+        <div class="pix">
+          <code id="chave">{{ config.chave_pix }}</code>
+          <button class="botao botao-claro botao-pequeno" type="button" onclick="navigator.clipboard.writeText(document.getElementById('chave').textContent.trim()).then(()=>{this.textContent='Copiada!'})">Copiar</button>
+        </div>
+        <p class="suave">Depois de pagar, envie o comprovante no WhatsApp. Assim que a Diana conferir, seu horário fica confirmado.</p>
+        <a class="botao botao-zap botao-largo" href="{{ link_whatsapp(config.whatsapp, msg_whatsapp) }}" target="_blank" rel="noopener">Enviar comprovante no WhatsApp</a>
+      {% endif %}
+      <p class="suave" style="margin-top:14px">Guarde este link para acompanhar seu agendamento. Quer ver seu histórico e a promoção? <a href="/minha-area">Crie sua área</a>.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "painel/base.html" %}
+{% block titulo %}Clientes{% endblock %}
+{% block conteudo %}
+<h1 style="font-size:26px">Clientes</h1>
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px">
+  <form method="get" action="/painel/clientes" style="display:flex;gap:8px;flex-wrap:wrap;margin:0">
+    <input type="hidden" name="filtro" value="{{ filtro }}">
+    <label class="sr" for="busca">Buscar</label>
+    <input id="busca" class="entrada" name="q" value="{{ q }}" placeholder="Nome ou WhatsApp" style="width:220px">
+    <button class="botao botao-claro botao-pequeno" type="submit">Buscar</button>
+  </form>
+  <a class="botao botao-pequeno {% if filtro != 'todas' %}botao-claro{% endif %}" href="/painel/clientes">Todas</a>
+  <a class="botao botao-pequeno {% if filtro != 'sumidas' %}botao-claro{% endif %}" href="/painel/clientes?filtro=sumidas">Sumidas</a>
+</div>
+
+<div class="cartao tabela-caixa">
+  <table class="tabela">
+    <thead><tr><th>Cliente</th><th>Visitas</th><th>Última</th><th>Ritmo</th><th>Sem vir</th><th></th></tr></thead>
+    <tbody>
+    {% for l in linhas %}{% set c = l.cliente %}{% set f = l.freq %}
+      <tr>
+        <td><a href="/painel/clientes/{{ c.id }}"><strong>{{ c.nome }}</strong></a><br><span class="suave">{{ c.whatsapp|zap }}{% if c.senha_hash %} · tem área{% endif %}</span></td>
+        <td>{{ f.visitas }}</td>
+        <td>{{ f.ultima.strftime('%d/%m/%y') if f.ultima else '—' }}</td>
+        <td>{{ 'a cada %d dias'|format(f.intervalo_medio) if f.intervalo_medio else '—' }}</td>
+        <td>{% if f.dias_sem_vir is not none %}{{ f.dias_sem_vir }} dias{% if f.sumida %} <span class="etiqueta tag-sumida">sumida</span>{% endif %}{% else %}—{% endif %}</td>
+        <td><a class="botao botao-zap botao-pequeno" href="{{ link_whatsapp(c.whatsapp, l.msg) }}" target="_blank" rel="noopener">Chamar</a></td>
+      </tr>
+    {% else %}<tr><td colspan="6" class="suave">Nenhuma cliente {% if filtro == 'sumidas' %}sumida{% endif %}.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<form class="cartao" method="post" action="/painel/clientes" style="margin-top:16px">
+  <h2 style="font-family:inherit;font-size:18px;margin-top:0">Cadastrar cliente</h2>
+  <div class="linha-form">
+    <label class="campo">Nome<input class="entrada" name="nome" required></label>
+    <label class="campo">WhatsApp<input class="entrada" name="whatsapp" type="tel" required></label>
+    <label class="campo">Observações<input class="entrada" name="observacoes" placeholder="alergia, preferência de cor..."></label>
+    <button class="botao botao-pequeno" type="submit">Cadastrar</button>
+  </div>
+</form>
+{% endblock %}
