@@ -1,6 +1,7 @@
 """App da agenda da Diana Ferraz — site da cliente + painel da Diana."""
 
 import os
+import secrets
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -30,7 +31,9 @@ def criar_app(com_ciclo: bool = True) -> FastAPI:
     app = FastAPI(title="Agenda Diana Ferraz", lifespan=ciclo if com_ciclo else None, docs_url=None, redoc_url=None)
     app.add_middleware(
         SessionMiddleware,
-        secret_key=os.environ.get("SECRET_KEY", "dev-troque-em-producao"),
+        # Sem SECRET_KEY, gera uma aleatoria a cada subida (sessoes caem no restart).
+        # Nunca um valor fixo: o repositorio e publico e daria pra forjar o login do painel.
+        secret_key=os.environ.get("SECRET_KEY") or secrets.token_hex(32),
         session_cookie="agenda_sessao",
         max_age=60 * 60 * 24 * 30,
         same_site="lax",
