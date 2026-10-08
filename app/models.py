@@ -50,6 +50,8 @@ class Servico(Base):
     # False = só aparece na tabela (ex.: adesivos, avisados no atendimento).
     agendavel: Mapped[bool] = mapped_column(Boolean, default=True)
     # Pacote: paga 100% antes; quantos atendimentos de mão/pé dá direito.
+    # Último horário em que o serviço pode COMEÇAR ("13:00"); vazio = sem limite.
+    ultimo_inicio: Mapped[str] = mapped_column(String(5), default="")
     eh_pacote: Mapped[bool] = mapped_column(Boolean, default=False)
     pacote_maos: Mapped[int] = mapped_column(Integer, default=0)
     pacote_pes: Mapped[int] = mapped_column(Integer, default=0)
@@ -157,3 +159,27 @@ class Pagamento(Base):
 
     cliente: Mapped[Cliente] = relationship()
     agendamento: Mapped[Agendamento | None] = relationship(back_populates="pagamentos")
+
+
+CATEGORIAS_DESPESA = ("material", "produtos", "aluguel", "contas", "transporte", "outros")
+ROTULO_CATEGORIA = {
+    "material": "Material (lixa, algodão, descartáveis)",
+    "produtos": "Produtos (esmaltes, cremes)",
+    "aluguel": "Aluguel da sala",
+    "contas": "Contas (luz, internet, celular)",
+    "transporte": "Transporte",
+    "outros": "Outros",
+}
+
+
+class Despesa(Base):
+    """Dinheiro que saiu (financeiro da Diana: recebido - despesas = lucro)."""
+
+    __tablename__ = "despesas"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    descricao: Mapped[str] = mapped_column(String(160))
+    categoria: Mapped[str] = mapped_column(String(20), default="outros")
+    valor: Mapped[int] = mapped_column(Integer)
+    forma: Mapped[str] = mapped_column(String(10), default="pix")
+    pago_em: Mapped[datetime] = mapped_column(DateTime, default=agora_loja, index=True)

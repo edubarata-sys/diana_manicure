@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
+from sqlalchemy import inspect, text
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -15,8 +16,36 @@ from .servicos import semear
 PASTA = Path(__file__).parent
 
 
+# Colunas que entraram depois da primeira subida: create_all só cria tabela nova,
+# não acrescenta coluna em tabela que já existe no Postgres do Railway.
+COLUNAS_NOVAS = [
+    # tabela, coluna, DDL, SQL de preenchimento logo após criar
+    ("servicos", "ultimo_inicio", "VARCHAR(5) NOT NULL DEFAULT ''",
+     None),
+    ("config", "tolerancia_atraso_min", "INTEGER NOT NULL DEFAULT 10", None),
+]
+
+
+def atualizar_colunas(eng) -> list[str]:
+    feitas = []
+    nomes = inspect(eng).get_table_names()
+    for tabela, coluna, ddl, preencher in COLUNAS_NOVAS:
+        if tabela not in nomes:
+            continue
+        existentes = {c["name"] for c in inspect(eng).get_columns(tabela)}
+        if coluna in existentes:
+            continue
+        with eng.begin() as conn:
+            conn.execute(text(f"ALTER TABLE {tabela} ADD COLUMN {coluna} {ddl}"))
+            if preencher:
+                conn.execute(text(preencher))
+        feitas.append(f"{tabela}.{coluna}")
+    return feitas
+
+
 def iniciar_banco(eng=engine, fabrica=SessaoLocal) -> None:
     Base.metadata.create_all(eng)
+    atualizar_colunas(eng)
     with fabrica() as db:
         semear(db)
 

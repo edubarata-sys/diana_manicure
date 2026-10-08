@@ -5,7 +5,7 @@
   <div class="centro">
     <p class="olho">Agendamento</p>
     <h1 class="titulo">Escolha data e horário</h1>
-    <p class="subtitulo">{{ servico.nome }} · {{ servico.preco|brl }}{% if servico.duracao_min %} · {{ servico.duracao_min }} min{% endif %} · <a href="/#servicos">trocar</a></p>
+    <p class="subtitulo">{{ servico.nome }} · {{ servico.preco|brl }}{% if servico.duracao_min %} · {{ servico.duracao_min }} min{% endif %}{% if servico.ultimo_inicio %} · início até {{ servico.ultimo_inicio }}{% endif %} · <a href="/#servicos">trocar</a></p>
     <div class="cartao">
       <p class="olho">Etapa 2 de 3</p>
       <div class="etapas" aria-hidden="true"><span class="etapa feita"></span><span class="etapa-linha"></span><span class="etapa feita"></span><span class="etapa-linha"></span><span class="etapa"></span></div>

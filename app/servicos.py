@@ -21,6 +21,7 @@ from .regras import (
     progresso_promocao,
     so_digitos,
     _hhmm,
+    ler_hora_opcional,
 )
 
 SERVICOS_INICIAIS = [
@@ -115,7 +116,14 @@ def livres(db: Session, dia: date, servico: m.Servico) -> list[datetime]:
     hoje = agora_loja().date()
     if dia < hoje or dia > hoje + timedelta(days=c.dias_maximos_agenda):
         return []
-    return horarios_livres(dia, servico.duracao_min, expediente(c), ocupados_no_dia(db, dia), agora_loja())
+    return horarios_livres(
+        dia,
+        servico.duracao_min,
+        expediente(c),
+        ocupados_no_dia(db, dia),
+        agora_loja(),
+        ler_hora_opcional(servico.ultimo_inicio),
+    )
 
 
 def cliente_por_whatsapp(db: Session, whatsapp: str) -> m.Cliente | None:

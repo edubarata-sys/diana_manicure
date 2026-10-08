@@ -38,7 +38,7 @@
 <form class="cartao" method="post" action="/painel/servicos" style="margin-top:16px">
   <h2 style="font-family:inherit;font-size:18px;margin-top:0">Serviços e preços</h2>
   <div class="tabela-caixa"><table class="tabela">
-    <thead><tr><th>Nome</th><th>Descrição</th><th>Preço</th><th>Duração (min)</th><th>Ativo</th><th>Agendável</th></tr></thead>
+    <thead><tr><th>Nome</th><th>Descrição</th><th>Preço</th><th>Duração (min)</th><th>Último início</th><th>Ativo</th><th>Agendável</th></tr></thead>
     <tbody>
     {% for s in servicos %}{% set p = 's%d_'|format(s.id) %}
       <tr>
@@ -46,6 +46,7 @@
         <td><input class="entrada" name="{{ p }}descricao" value="{{ s.descricao }}" style="min-width:200px" aria-label="Descrição"></td>
         <td><input class="entrada" name="{{ p }}preco" value="{{ '%.2f'|format(s.preco / 100)|replace('.', ',') }}" inputmode="decimal" style="width:100px" aria-label="Preço"></td>
         <td><input class="entrada" name="{{ p }}duracao" type="number" min="0" value="{{ s.duracao_min }}" style="width:90px" aria-label="Duração"></td>
+        <td><input class="entrada" name="{{ p }}ultimo_inicio" type="time" value="{{ s.ultimo_inicio }}" style="width:110px" aria-label="Último horário para começar" title="Vazio = sem limite"></td>
         <td><input type="checkbox" name="{{ p }}ativo" {% if s.ativo %}checked{% endif %} aria-label="Ativo"></td>
         <td><input type="checkbox" name="{{ p }}agendavel" {% if s.agendavel %}checked{% endif %} aria-label="Agendável"></td>
       </tr>
@@ -55,10 +56,12 @@
         <td><input class="entrada" name="novo_descricao" aria-label="Descrição do novo"></td>
         <td><input class="entrada" name="novo_preco" inputmode="decimal" style="width:100px" aria-label="Preço do novo"></td>
         <td><input class="entrada" name="novo_duracao" type="number" min="0" value="60" style="width:90px" aria-label="Duração do novo"></td>
+        <td></td>
         <td colspan="2" class="suave">novo</td>
       </tr>
     </tbody>
   </table></div>
+  <p class="suave">"Último início": o serviço só pode começar até esse horário (opcional). Vazio = sem limite. Pausas (almoço/café) e o fim do expediente já são respeitados sozinhos.</p>
   <button class="botao" type="submit" style="margin-top:12px">Salvar tabela</button>
 </form>
 {% endblock %}

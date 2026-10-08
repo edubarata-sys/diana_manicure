@@ -1,5 +1,27 @@
 {% extends "painel/base.html" %}
-{% block titulo %}Financeiro{% endblock %}
+{% block titulo %}Financeiro<div class="grade" style="align-items:start;margin-top:14px">
+  <div class="cartao tabela-caixa">
+    <h2 style="font-family:inherit;font-size:18px;margin-top:0">Despesas do mês</h2>
+    {% if por_categoria %}<p class="suave">{% for c, v in por_categoria %}{{ ROTULO_CATEGORIA.get(c, c).split(' (')[0] }}: <strong>{{ v|brl }}</strong>{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+    <table class="tabela"><thead><tr><th>Data</th><th>O quê</th><th class="num">Valor</th><th></th></tr></thead><tbody>
+    {% for d in despesas %}<tr><td>{{ d.pago_em.strftime('%d/%m') }}</td><td>{{ d.descricao }} <span class="suave">· {{ ROTULO_CATEGORIA.get(d.categoria, d.categoria).split(' (')[0] }} · {{ ROTULO_FORMA.get(d.forma, d.forma) }}</span></td><td class="num">{{ d.valor|brl }}</td>
+      <td><form method="post" action="/painel/financeiro/despesa/{{ d.id }}/apagar" style="margin:0"><button class="botao botao-perigo botao-pequeno" type="submit" aria-label="Apagar despesa {{ d.descricao }}">Apagar</button></form></td></tr>
+    {% else %}<tr><td colspan="4" class="suave">Nenhuma despesa lançada neste mês.</td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+  <form class="cartao" method="post" action="/painel/financeiro/despesa">
+    <h2 style="font-family:inherit;font-size:18px;margin-top:0">Lançar despesa</h2>
+    <label class="campo">Descrição<input class="entrada" name="descricao" placeholder="Ex.: esmaltes Risqué" required></label>
+    <div class="linha-form">
+      <label class="campo">Categoria<select class="entrada" name="categoria">{% for c in categorias %}<option value="{{ c }}">{{ ROTULO_CATEGORIA[c] }}</option>{% endfor %}</select></label>
+      <label class="campo">Valor (R$)<input class="entrada" name="valor" inputmode="decimal" required></label>
+      <label class="campo">Forma<select class="entrada" name="forma">{% for f in formas %}<option value="{{ f }}">{{ ROTULO_FORMA[f] }}</option>{% endfor %}</select></label>
+      <label class="campo">Data<input class="entrada" type="date" name="data" value="{{ hoje.isoformat() }}"></label>
+    </div>
+    <button class="botao botao-pequeno" type="submit">Lançar despesa</button>
+  </form>
+</div>
+{% endblock %}
 {% block conteudo %}
 <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
   <h1 style="font-size:26px;margin:0;flex:1">Financeiro · {{ titulo_mes }}</h1>
@@ -7,6 +29,8 @@
 </div>
 <div class="kpis" style="margin-top:14px">
   <div class="kpi"><small>Recebido no mês</small><strong>{{ total|brl }}</strong></div>
+  <div class="kpi"><small>Despesas</small><strong>{{ total_despesas|brl }}</strong></div>
+  <div class="kpi"><small>Lucro</small><strong style="{% if lucro < 0 %}color:var(--erro){% endif %}">{{ lucro|brl }}</strong></div>
   <div class="kpi"><small>Atendimentos</small><strong>{{ atendimentos }}</strong></div>
   <div class="kpi"><small>Faltas</small><strong>{{ faltas }}</strong></div>
   {% for f, v in por_forma.items() %}<div class="kpi"><small>{{ ROTULO_FORMA.get(f, f) }}</small><strong>{{ v|brl }}</strong></div>{% endfor %}
@@ -38,4 +62,26 @@
     <button class="botao botao-pequeno" type="submit">Lançar</button>
   </div>
 </form>
+<div class="grade" style="align-items:start;margin-top:14px">
+  <div class="cartao tabela-caixa">
+    <h2 style="font-family:inherit;font-size:18px;margin-top:0">Despesas do mês</h2>
+    {% if por_categoria %}<p class="suave">{% for c, v in por_categoria %}{{ ROTULO_CATEGORIA.get(c, c).split(' (')[0] }}: <strong>{{ v|brl }}</strong>{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+    <table class="tabela"><thead><tr><th>Data</th><th>O quê</th><th class="num">Valor</th><th></th></tr></thead><tbody>
+    {% for d in despesas %}<tr><td>{{ d.pago_em.strftime('%d/%m') }}</td><td>{{ d.descricao }} <span class="suave">· {{ ROTULO_CATEGORIA.get(d.categoria, d.categoria).split(' (')[0] }} · {{ ROTULO_FORMA.get(d.forma, d.forma) }}</span></td><td class="num">{{ d.valor|brl }}</td>
+      <td><form method="post" action="/painel/financeiro/despesa/{{ d.id }}/apagar" style="margin:0"><button class="botao botao-perigo botao-pequeno" type="submit" aria-label="Apagar despesa {{ d.descricao }}">Apagar</button></form></td></tr>
+    {% else %}<tr><td colspan="4" class="suave">Nenhuma despesa lançada neste mês.</td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+  <form class="cartao" method="post" action="/painel/financeiro/despesa">
+    <h2 style="font-family:inherit;font-size:18px;margin-top:0">Lançar despesa</h2>
+    <label class="campo">Descrição<input class="entrada" name="descricao" placeholder="Ex.: esmaltes Risqué" required></label>
+    <div class="linha-form">
+      <label class="campo">Categoria<select class="entrada" name="categoria">{% for c in categorias %}<option value="{{ c }}">{{ ROTULO_CATEGORIA[c] }}</option>{% endfor %}</select></label>
+      <label class="campo">Valor (R$)<input class="entrada" name="valor" inputmode="decimal" required></label>
+      <label class="campo">Forma<select class="entrada" name="forma">{% for f in formas %}<option value="{{ f }}">{{ ROTULO_FORMA[f] }}</option>{% endfor %}</select></label>
+      <label class="campo">Data<input class="entrada" type="date" name="data" value="{{ hoje.isoformat() }}"></label>
+    </div>
+    <button class="botao botao-pequeno" type="submit">Lançar despesa</button>
+  </form>
+</div>
 {% endblock %}

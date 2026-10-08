@@ -97,6 +97,14 @@ def ler_pausas(texto: str) -> list[tuple[time, time]]:
     return pausas
 
 
+def ler_hora_opcional(texto: str | None) -> time | None:
+    """'13:00' -> time(13); vazio ou inválido -> None (sem limite)."""
+    try:
+        return _hhmm(texto) if texto and texto.strip() else None
+    except ValueError:
+        return None
+
+
 def ler_dias(texto: str) -> set[int]:
     return {int(x) for x in (texto or "").split(",") if x.strip().isdigit()}
 
@@ -121,6 +129,7 @@ def horarios_livres(
     exp: Expediente,
     ocupados: list[tuple[datetime, datetime]],
     agora: datetime,
+    ultimo_inicio: time | None = None,
 ) -> list[datetime]:
     """Inícios possíveis no dia: dentro do expediente, sem cruzar pausa nem outro horário,
     e com a antecedência mínima. Passo fixo a partir da abertura."""
@@ -134,6 +143,8 @@ def horarios_livres(
     livres = []
     t = inicio_dia
     while t + dur <= fim_dia:
+        if ultimo_inicio is not None and t.time() > ultimo_inicio:
+            break
         fim = t + dur
         if t >= limite and not any(_sobrepoe(t, fim, a, b) for a, b in pausas + ocupados):
             livres.append(t)

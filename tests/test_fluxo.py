@@ -170,3 +170,33 @@ def test_config_salva_horario(painel, fabrica):
     with fabrica() as db:
         c = sv.config(db)
         assert (c.abre, c.fecha, c.dias_atendimento, c.promo_idas) == ("10:00", "18:00", "3,4", 8)
+
+
+def test_despesa_entra_no_lucro_do_mes(painel, fabrica):
+    from app.regras import agora_loja as agora
+    hoje = agora().date().isoformat()
+    painel.post("/painel/financeiro/lancar", data={"cliente_id": "0", "valor": "10"})  # sem cliente: recusado
+    r = painel.post("/painel/clientes", data={"nome": "Fê", "whatsapp": "12944443333"}, follow_redirects=False)
+    cid = r.headers["location"].rsplit("/", 1)[1]
+    painel.post("/painel/financeiro/lancar", data={"cliente_id": cid, "valor": "100,00", "forma": "pix", "data": hoje})
+    painel.post("/painel/financeiro/despesa", data={"descricao": "Esmaltes", "categoria": "produtos", "valor": "35,50", "data": hoje})
+    fin = painel.get("/painel/financeiro")
+    assert "R$ 100,00" in fin.text and "R$ 35,50" in fin.text and "R$ 64,50" in fin.text
+    with fabrica() as db:
+        did = db.scalar(select(m.Despesa.id))
+    painel.post(f"/painel/financeiro/despesa/{did}/apagar")
+    assert "Nenhuma despesa lançada" in painel.get("/painel/financeiro").text
+
+
+def test_banco_antigo_ganha_colunas_novas_sem_perder_dados():
+    from sqlalchemy import create_engine, inspect as insp, text as sqltext
+    from app.main import atualizar_colunas
+    eng = create_engine("sqlite://")
+    with eng.begin() as c:
+        c.execute(sqltext("CREATE TABLE servicos (id INTEGER PRIMARY KEY, nome VARCHAR(80))"))
+        c.execute(sqltext("INSERT INTO servicos (nome) VALUES ('Pé + Mão')"))
+    assert atualizar_colunas(eng) == ["servicos.ultimo_inicio"]
+    assert "ultimo_inicio" in {col["name"] for col in insp(eng).get_columns("servicos")}
+    with eng.connect() as c:
+        assert c.execute(sqltext("SELECT nome, ultimo_inicio FROM servicos")).one() == ("Pé + Mão", "")
+    assert atualizar_colunas(eng) == []

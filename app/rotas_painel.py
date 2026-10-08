@@ -14,6 +14,7 @@ from . import servicos as sv
 from .regras import (
     MESES,
     agora_loja,
+    ler_hora_opcional,
     ler_valor,
     msg_lembrete,
     msg_promocao,
@@ -412,9 +413,25 @@ def financeiro(request: Request, mes: str | None = None, db: Session = Depends(g
         )
     )
     clientes = list(db.scalars(select(m.Cliente).order_by(m.Cliente.nome)))
+    despesas = list(
+        db.scalars(
+            select(m.Despesa).where(m.Despesa.pago_em >= ini, m.Despesa.pago_em < fim).order_by(m.Despesa.pago_em.desc())
+        )
+    )
+    total_despesas = sum(d.valor for d in despesas)
+    por_categoria: dict[str, int] = defaultdict(int)
+    for d in despesas:
+        por_categoria[d.categoria] += d.valor
+    total_recebido = sum(p.valor for p in pagamentos)
     return render(
         request,
         "painel/financeiro.html",
+        despesas=despesas,
+        total_despesas=total_despesas,
+        lucro=total_recebido - total_despesas,
+        por_categoria=sorted(por_categoria.items(), key=lambda x: -x[1]),
+        categorias=m.CATEGORIAS_DESPESA,
+        ROTULO_CATEGORIA=m.ROTULO_CATEGORIA,
         config=sv.config(db),
         mes=f"{ano}-{mm:02d}",
         titulo_mes=f"{MESES[mm - 1].capitalize()} {ano}",
@@ -465,6 +482,54 @@ def financeiro_lancar(
     db.commit()
     recado(request, f"Recebimento de {c.nome} lançado.")
     return ir(f"/painel/financeiro?mes={quando:%Y-%m}")
+
+
+@router.post("/financeiro/despesa")
+def despesa_lancar(
+    request: Request,
+    descricao: str = Form(""),
+    categoria: str = Form("outros"),
+    valor: str = Form(""),
+    forma: str = Form("pix"),
+    data: str = Form(""),
+    db: Session = Depends(get_db),
+):
+    if (r := _exigir(request)) is not None:
+        return r
+    v = ler_valor(valor)
+    if not v or not descricao.strip():
+        recado(request, "Informe a descrição e o valor da despesa.", "erro")
+        return ir("/painel/financeiro")
+    try:
+        quando = datetime.fromisoformat(f"{data}T12:00") if data else agora_loja()
+    except ValueError:
+        quando = agora_loja()
+    db.add(
+        m.Despesa(
+            descricao=descricao.strip(),
+            categoria=categoria if categoria in m.CATEGORIAS_DESPESA else "outros",
+            valor=v,
+            forma=forma if forma in m.FORMAS else "pix",
+            pago_em=quando,
+        )
+    )
+    db.commit()
+    recado(request, "Despesa lançada.")
+    return ir(f"/painel/financeiro?mes={quando:%Y-%m}")
+
+
+@router.post("/financeiro/despesa/{did}/apagar")
+def despesa_apagar(request: Request, did: int, db: Session = Depends(get_db)):
+    if (r := _exigir(request)) is not None:
+        return r
+    d = db.get(m.Despesa, did)
+    if d is None:
+        return ir("/painel/financeiro")
+    mes = f"{d.pago_em:%Y-%m}"
+    db.delete(d)
+    db.commit()
+    recado(request, "Despesa apagada.")
+    return ir(f"/painel/financeiro?mes={mes}")
 
 
 # ---------------- Configurações ----------------
@@ -539,6 +604,9 @@ async def servicos_salvar(request: Request, db: Session = Depends(get_db)):
         dur = str(form.get(f"{p}duracao", "")).strip()
         if dur.isdigit():
             s.duracao_min = int(dur)
+        if f"{p}ultimo_inicio" in form:
+            limite = str(form[f"{p}ultimo_inicio"]).strip()
+            s.ultimo_inicio = limite if ler_hora_opcional(limite) else ""
         s.ativo = f"{p}ativo" in form
         s.agendavel = f"{p}agendavel" in form
     novo_nome = str(form.get("novo_nome", "")).strip()

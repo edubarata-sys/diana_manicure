@@ -85,3 +85,28 @@ def test_frequencia_e_sumida():
 def test_calendario_comeca_no_domingo():
     semanas = semanas_do_mes(2026, 10)
     assert semanas[0][:4] == [None, None, None, None] and semanas[0][4] == date(2026, 10, 1)
+
+
+def test_pe_as_9_bloqueia_pe_e_mao_na_manha():
+    """Pé 9h-10h marcado: Pé + Mão (2h) não cabe mais de manhã (manhã vai até 11h)."""
+    pe = [(datetime(2026, 10, 20, 9), datetime(2026, 10, 20, 10))]
+    pe_e_mao = hhmm(horarios_livres(TERCA, 120, EXP, pe, ANTES))
+    assert not [h for h in pe_e_mao if h < "12:00"]
+    assert pe_e_mao[0] == "12:00"
+    # Mas um serviço de 1h ainda cabe às 10h, e um de 30 min às 10h30.
+    assert "10:00" in hhmm(horarios_livres(TERCA, 60, EXP, pe, ANTES))
+    assert "10:30" in hhmm(horarios_livres(TERCA, 30, EXP, pe, ANTES))
+
+
+def test_ultimo_inicio_opcional_por_servico():
+    livres = hhmm(horarios_livres(TERCA, 60, EXP, [], ANTES, time(14)))
+    assert livres[-1] == "14:00"
+
+
+def test_pe_e_mao_as_9_fecha_a_manha():
+    """Pé + Mão 9h-11h: nada mais de manhã, nem esmaltação de 30 min."""
+    ocupado = [(datetime(2026, 10, 20, 9), datetime(2026, 10, 20, 11))]
+    for duracao in (30, 60, 120):
+        livres = hhmm(horarios_livres(TERCA, duracao, EXP, ocupado, ANTES))
+        assert not [h for h in livres if h < "12:00"], duracao
+        assert livres[0] == "12:00"
