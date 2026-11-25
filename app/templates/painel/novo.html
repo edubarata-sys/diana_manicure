@@ -30,3 +30,46 @@
   <button class="botao" type="submit">Agendar</button>
 </form>
 {% endblock %}
+{% block tour %}<script type="application/json" id="tour-passos">[
+ {
+  "tela": "Agendar",
+  "titulo": "Agendar para uma cliente",
+  "texto": "Use quando a cliente pedir por WhatsApp ou telefone."
+ },
+ {
+  "tela": "Agendar",
+  "titulo": "Serviço e dia",
+  "texto": "Escolha o serviço e o dia. A duração do serviço define os horários livres.",
+  "alvo": "form[action='/painel/novo'][method='get']"
+ },
+ {
+  "tela": "Agendar",
+  "titulo": "Horário",
+  "texto": "A lista mostra os livres. Você pode digitar outro para encaixar fora da grade, desde que não bata com outro atendimento.",
+  "alvo": "input[name='hora']"
+ },
+ {
+  "tela": "Agendar",
+  "titulo": "Quem é a cliente",
+  "texto": "Escolha uma cliente cadastrada ou deixe em nova cliente e preencha nome e WhatsApp ao lado.",
+  "alvo": "select[name='cliente_id']",
+  "sistema": "Cliente nova já fica cadastrada na sua lista."
+ },
+ {
+  "tela": "Agendar",
+  "titulo": "Sinal já pago",
+  "texto": "Marque se ela já pagou. Sem marcar, o agendamento fica aguardando sinal.",
+  "alvo": "input[name='sinal_pago']"
+ },
+ {
+  "tela": "Agendar",
+  "titulo": "Agendar",
+  "texto": "Toque para salvar. Ele aparece na Agenda do dia.",
+  "alvo": "form[action='/painel/novo'][method='post'] button[type='submit']"
+ },
+ {
+  "tela": "Agendar",
+  "titulo": "Próxima tela",
+  "texto": "Agora clique em Clientes no menu."
+ }
+]</script>{% endblock %}

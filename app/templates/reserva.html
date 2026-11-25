@@ -38,3 +38,29 @@
   </div>
 </section>
 {% endblock %}
+{% block tour %}<script type="application/json" id="tour-passos">[
+ {
+  "tela": "Pagamento",
+  "titulo": "Valor do sinal",
+  "texto": "Esse é o valor para garantir o horário.",
+  "alvo": ".sinal"
+ },
+ {
+  "tela": "Pagamento",
+  "titulo": "Chave Pix",
+  "texto": "Toque em Copiar e pague no app do seu banco.",
+  "alvo": ".pix"
+ },
+ {
+  "tela": "Pagamento",
+  "titulo": "Enviar comprovante",
+  "texto": "Mande o comprovante pelo WhatsApp. Quando a Diana conferir, seu horário fica confirmado.",
+  "alvo": "a.botao-zap"
+ },
+ {
+  "tela": "Pagamento",
+  "titulo": "Pronto!",
+  "texto": "Guarde o link desta página para acompanhar seu horário.",
+  "fim": true
+ }
+]</script>{% endblock %}

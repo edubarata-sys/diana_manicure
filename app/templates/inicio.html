@@ -54,3 +54,34 @@
   </div>
 </section>
 {% endblock %}
+{% block tour %}<script type="application/json" id="tour-passos">[
+ {
+  "tela": "Site",
+  "titulo": "Bem-vinda!",
+  "texto": "Aqui você marca seu horário sozinha, sem precisar de cadastro.",
+  "inicio": true
+ },
+ {
+  "tela": "Site",
+  "titulo": "Escolha o serviço",
+  "texto": "Veja os preços e marque o serviço que quer.",
+  "alvo": "#servicos"
+ },
+ {
+  "tela": "Site",
+  "titulo": "Como funciona",
+  "texto": "Escolha, agende e pague o sinal de 50% no Pix. A confirmação chega pelo WhatsApp.",
+  "alvo": ".passos"
+ },
+ {
+  "tela": "Site",
+  "titulo": "Minha área",
+  "texto": "Se quiser, crie uma senha para ver seu histórico, seu pacote e a promoção.",
+  "alvo": "a[href='/minha-area']"
+ },
+ {
+  "tela": "Site",
+  "titulo": "Próximo passo",
+  "texto": "Escolha um serviço e toque em Continuar. O tour segue na próxima tela."
+ }
+]</script>{% endblock %}

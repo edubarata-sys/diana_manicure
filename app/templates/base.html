@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito+Sans:wght@400;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/estilo.css">
+  <link rel="stylesheet" href="/static/tour.css">
 </head>
 <body>
   <header class="topo">
@@ -19,6 +20,7 @@
     <nav class="menu" aria-label="Menu">
       <a href="/#servicos">Agendar</a>
       <a href="/minha-area">Minha área</a>
+      <button type="button" class="tour-btn" onclick="Tour.iniciar(true)" title="Tour guiado: mostra como usar esta tela">&#9654; Tour</button>
     </nav>
   </header>
   {% if recado %}<div class="recado recado-{{ recado.tipo }}" role="status">{{ recado.texto }}</div>{% endif %}
@@ -30,5 +32,7 @@
     <p><strong>WhatsApp: <a href="{{ link_whatsapp(config.whatsapp) }}">{{ config.whatsapp|zap }}</a></strong></p>
     <p style="font-size:12px;opacity:.8">Atendimento com hora marcada</p>
   </footer>
+  {% block tour %}{% endblock %}
+  <script src="/static/tour.js"></script>
 </body>
 </html>

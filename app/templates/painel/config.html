@@ -65,3 +65,41 @@
   <button class="botao" type="submit" style="margin-top:12px">Salvar tabela</button>
 </form>
 {% endblock %}
+{% block tour %}<script type="application/json" id="tour-passos">[
+ {
+  "tela": "Ajustes",
+  "titulo": "Ajustes",
+  "texto": "Aqui você muda as regras da agenda e os preços. Vale na hora para o site."
+ },
+ {
+  "tela": "Ajustes",
+  "titulo": "Horário de atendimento",
+  "texto": "Abre e fecha, pausas (almoço, café), de quantos em quantos minutos a grade anda, antecedência mínima e até quantos dias para frente a agenda fica aberta.",
+  "alvo": "form[action='/painel/config']"
+ },
+ {
+  "tela": "Ajustes",
+  "titulo": "Sinal e regras",
+  "texto": "Na mesma tela: % do sinal, prazo para pagar antes de liberar o horário, aviso de cancelamento, tolerância de atraso e quantas idas dão 1 grátis.",
+  "alvo": "form[action='/painel/config']"
+ },
+ {
+  "tela": "Ajustes",
+  "titulo": "Contato e Pix",
+  "texto": "Nome, WhatsApp, chave Pix, endereço e o aviso que aparece na tabela de preços. É o que a cliente vê no site.",
+  "alvo": "form[action='/painel/config']"
+ },
+ {
+  "tela": "Ajustes",
+  "titulo": "Serviços e preços",
+  "texto": "Mude nome, preço e duração de cada serviço.",
+  "alvo": "form[action='/painel/servicos']",
+  "sistema": "A duração muda sozinha os horários livres no site."
+ },
+ {
+  "tela": "Ajustes",
+  "titulo": "Pronto!",
+  "texto": "Você viu todo o painel. O site das clientes também tem um ▶ Tour, que mostra o caminho delas. Quando quiser rever, toque em ▶ Tour.",
+  "fim": true
+ }
+]</script>{% endblock %}

@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito+Sans:wght@400;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/estilo.css">
+  <link rel="stylesheet" href="/static/tour.css">
 </head>
 <body>
   <header class="topo painel-nav">
@@ -21,11 +22,14 @@
       <a href="/painel/clientes" {% if atual.startswith('/painel/clientes') %}aria-current="page"{% endif %}>Clientes</a>
       <a href="/painel/financeiro" {% if atual.startswith('/painel/financeiro') %}aria-current="page"{% endif %}>Financeiro</a>
       <a href="/painel/config" {% if atual.startswith('/painel/config') %}aria-current="page"{% endif %}>Ajustes</a>
+      <button type="button" class="tour-btn" onclick="Tour.iniciar(true)" title="Tour guiado: mostra como usar esta tela">&#9654; Tour</button>
       <form method="post" action="/painel/sair" style="margin:0"><button type="submit">Sair</button></form>
     </nav>
     {% endblock %}
   </header>
   {% if recado %}<div class="recado recado-{{ recado.tipo }}" role="status">{{ recado.texto }}</div>{% endif %}
   <main class="secao"><div class="largo">{% block conteudo %}{% endblock %}</div></main>
+  {% block tour %}{% endblock %}
+  <script src="/static/tour.js"></script>
 </body>
 </html>

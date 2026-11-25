@@ -41,3 +41,46 @@
   </div>
 </form>
 {% endblock %}
+{% block tour %}<script type="application/json" id="tour-passos">[
+ {
+  "tela": "Clientes",
+  "titulo": "Suas clientes",
+  "texto": "Aqui ficam todas as clientes, de quem agendou pelo site e de quem você cadastrou."
+ },
+ {
+  "tela": "Clientes",
+  "titulo": "Buscar",
+  "texto": "Procure pelo nome ou pelo WhatsApp.",
+  "alvo": "#busca"
+ },
+ {
+  "tela": "Clientes",
+  "titulo": "Sumidas",
+  "texto": "Mostra quem passou do ritmo de costume e não voltou.",
+  "alvo": "a[href='/painel/clientes?filtro=sumidas']",
+  "sistema": "O ritmo é calculado sozinho pelas visitas de cada cliente."
+ },
+ {
+  "tela": "Clientes",
+  "titulo": "A lista",
+  "texto": "Visitas, última ida, ritmo (a cada quantos dias vem) e dias sem vir. \"tem área\" quer dizer que ela criou senha na Minha área do site.",
+  "alvo": ".tabela-caixa"
+ },
+ {
+  "tela": "Clientes",
+  "titulo": "Chamar",
+  "texto": "Abre o WhatsApp com uma mensagem de saudade pronta.",
+  "alvo": ".tabela .botao-zap"
+ },
+ {
+  "tela": "Clientes",
+  "titulo": "Cadastrar cliente",
+  "texto": "Para incluir alguém sem agendar agora.",
+  "alvo": "form[action='/painel/clientes'][method='post']"
+ },
+ {
+  "tela": "Clientes",
+  "titulo": "Próxima tela",
+  "texto": "Clique no nome de uma cliente para ver a ficha dela. Se ainda não tiver nenhuma, clique em Financeiro no menu."
+ }
+]</script>{% endblock %}

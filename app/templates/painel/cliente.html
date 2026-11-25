@@ -51,3 +51,45 @@
   <button class="botao botao-pequeno" type="submit">Salvar</button>
 </form>
 {% endblock %}
+{% block tour %}<script type="application/json" id="tour-passos">[
+ {
+  "tela": "Ficha da cliente",
+  "titulo": "Ficha da cliente",
+  "texto": "Tudo sobre ela num lugar só."
+ },
+ {
+  "tela": "Ficha da cliente",
+  "titulo": "Resumo",
+  "texto": "Visitas, ritmo e quanto falta para a grátis da promoção.",
+  "alvo": ".kpis"
+ },
+ {
+  "tela": "Ficha da cliente",
+  "titulo": "Agendar para ela",
+  "texto": "Já abre o agendamento com ela escolhida.",
+  "alvo": "a[href^='/painel/novo?cliente_id=']"
+ },
+ {
+  "tela": "Ficha da cliente",
+  "titulo": "Mensagens prontas",
+  "texto": "Saudade e promoção já escritas com o nome dela. Abre o WhatsApp, você só envia.",
+  "alvo": "a.botao-zap"
+ },
+ {
+  "tela": "Ficha da cliente",
+  "titulo": "Atendimentos e pagamentos",
+  "texto": "O histórico completo dela.",
+  "alvo": ".tabela-caixa"
+ },
+ {
+  "tela": "Ficha da cliente",
+  "titulo": "Dados",
+  "texto": "Corrija nome, WhatsApp e anote observações (ex.: alergia a algum produto, cor preferida).",
+  "alvo": "form[action^='/painel/clientes/']"
+ },
+ {
+  "tela": "Ficha da cliente",
+  "titulo": "Próxima tela",
+  "texto": "Agora clique em Financeiro no menu."
+ }
+]</script>{% endblock %}

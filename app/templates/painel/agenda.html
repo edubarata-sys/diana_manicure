@@ -24,3 +24,79 @@
   </section>
 </div>
 {% endblock %}
+{% block tour %}<script type="application/json" id="tour-passos">[
+ {
+  "tela": "Agenda",
+  "titulo": "Bem-vinda ao seu painel",
+  "texto": "Este tour mostra cada parte do painel. Avance com Próximo. Quando ele pedir, clique no menu indicado: o tour continua na outra tela. Pode sair quando quiser e voltar pelo botão ▶ Tour.",
+  "inicio": true
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Seu menu",
+  "texto": "Agenda (o dia), + Agendar (marcar por você), Clientes, Financeiro e Ajustes. O ▶ Tour repete esta explicação quando quiser.",
+  "alvo": ".painel-nav .menu"
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Próximos dias",
+  "texto": "Toque num dia para ver os atendimentos dele.",
+  "alvo": ".dias-semana"
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Ir para qualquer dia",
+  "texto": "Use as setas ‹ › ou escolha a data aqui.",
+  "alvo": "#ir-dia"
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Agendar neste dia",
+  "texto": "Para marcar você mesma uma cliente que pediu por WhatsApp ou telefone.",
+  "alvo": "a.botao[href^='/painel/novo?dia=']"
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Atendimentos do dia",
+  "texto": "Cada cartão mostra hora, cliente, serviço, até que horas vai, a situação e se é do pacote. Toque no nome para abrir a ficha da cliente.",
+  "alvo": ".grade > section:first-child"
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Lembrete",
+  "texto": "Abre o WhatsApp da cliente com a mensagem de lembrete pronta. Você só toca em enviar.",
+  "alvo": ".item-agenda .botao-zap"
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Sinal recebido",
+  "texto": "Confira o Pix no seu banco, escolha a forma e toque em Sinal recebido.",
+  "alvo": ".item-agenda form[action$='/sinal']",
+  "sistema": "O horário fica confirmado e aparece o botão Avisar confirmação, com a mensagem pronta para a cliente."
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Concluir atendimento",
+  "texto": "Abra quando terminar: o valor recebido agora já vem descontando o sinal. Informe a forma, os adesivos (em pares), se usou o pacote e se foi a grátis da promoção.",
+  "alvo": ".item-agenda details.concluir",
+  "sistema": "O valor entra no Financeiro e a visita conta no histórico e na promoção da cliente."
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Faltou e Cancelar",
+  "texto": "Faltou: o sinal fica com você (no pacote, o atendimento conta como usado). Cancelar libera o horário.",
+  "alvo": ".item-agenda form[action$='/falta']"
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Aguardando sinal",
+  "texto": "Quem reservou pelo site e ainda não pagou o sinal aparece aqui. Confira o Pix antes de confirmar.",
+  "alvo": ".grade > section:last-child",
+  "sistema": "Se o sinal não chegar no prazo dos Ajustes, o horário libera sozinho."
+ },
+ {
+  "tela": "Agenda",
+  "titulo": "Próxima tela",
+  "texto": "Agora clique em + Agendar no menu lá em cima. O tour continua lá."
+ }
+]</script>{% endblock %}
